@@ -7,7 +7,7 @@ import { Pagination } from '../components/common/Pagination';
 import { formatPokemonName, debounce } from '../utils/pokemon';
 
 type ViewMode = 'grid' | 'list';
-type SortOption = 'name' | 'pokemon-count';
+type SortOption = 'name' | 'name-desc';
 
 export const AbilitiesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,14 +36,13 @@ export const AbilitiesPage: React.FC = () => {
     
     if (!abilities) return [];
 
-    // Sort abilities
+    // Sort abilities based on selected option
     return abilities.sort((a: any, b: any) => {
       switch (sortBy) {
         case 'name':
           return a.name.localeCompare(b.name);
-        case 'pokemon-count':
-          // Note: We don't have pokemon count in the basic list, so we'll sort by name as fallback
-          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
         default:
           return 0;
       }
@@ -57,6 +56,12 @@ export const AbilitiesPage: React.FC = () => {
   const paginatedAbilities = processedAbilities.slice(startIndex, startIndex + itemsPerPage);
 
   const isLoading = isLoadingAll || (searchQuery.length > 0 && isSearching);
+
+  // Reset page when sort changes
+  const handleSortChange = (newSort: SortOption) => {
+    setSortBy(newSort);
+    setCurrentPage(1);
+  };
 
   if (isLoading && !processedAbilities.length) {
     return (
@@ -161,12 +166,12 @@ export const AbilitiesPage: React.FC = () => {
               <Filter className="w-4 h-4 text-gray-500" />
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                onChange={(e) => handleSortChange(e.target.value as SortOption)}
                 className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
                 aria-label="Sort abilities"
               >
-                <option value="name">Sort by Name</option>
-                <option value="pokemon-count">Sort by Pokémon Count</option>
+                <option value="name">Sort A-Z</option>
+                <option value="name-desc">Sort Z-A</option>
               </select>
             </div>
 
@@ -225,6 +230,7 @@ export const AbilitiesPage: React.FC = () => {
               showPageInfo
               totalItems={processedAbilities.length}
               itemsPerPage={itemsPerPage}
+              onPageChange={setCurrentPage}
               className="pt-8"
             />
           )}
