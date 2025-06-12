@@ -150,7 +150,7 @@ export const AbilitiesPage: React.FC = () => {
         <div className="flex flex-col gap-4">
           {/* Search Form */}
           <form onSubmit={handleSearchSubmit} className="flex gap-2">
-            <div className="relative flex-1 max-w-md">
+            <div className="relative flex-1 max-w-100">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
@@ -181,7 +181,7 @@ export const AbilitiesPage: React.FC = () => {
           </form>
 
           {/* Controls */}
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="flex gap-4 items-start sm:items-center justify-between">
             {/* Sort */}
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-500" />
