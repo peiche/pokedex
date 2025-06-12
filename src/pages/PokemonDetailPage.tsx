@@ -1,10 +1,11 @@
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, ArrowLeft, Ruler, Weight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, Ruler, Weight, Zap } from 'lucide-react';
 import { usePokemon, usePokemonSpecies, useAbility } from '../hooks/usePokemon';
 import { TypeBadge } from '../components/common/TypeBadge';
 import { StatBar } from '../components/pokemon/StatBar';
 import { EvolutionChain } from '../components/pokemon/EvolutionChain';
+import { Accordion } from '../components/common/Accordion';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { 
   formatPokemonName, 
@@ -13,24 +14,64 @@ import {
   getPokemonGeneration 
 } from '../utils/pokemon';
 
-const AbilityTooltip: React.FC<{ abilityName: string }> = ({ abilityName }) => {
-  const { data: ability } = useAbility(abilityName);
+const AbilityContent: React.FC<{ abilityName: string }> = ({ abilityName }) => {
+  const { data: ability, isLoading, error } = useAbility(abilityName);
   
-  const description = ability?.effect_entries?.find(
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-2">
+        <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <span className="text-sm text-gray-500 dark:text-gray-400">Loading ability details...</span>
+      </div>
+    );
+  }
+
+  if (error || !ability) {
+    return (
+      <div className="text-gray-500 dark:text-gray-400">
+        <p>Unable to load ability details.</p>
+      </div>
+    );
+  }
+
+  const description = ability.effect_entries?.find(
     (entry: any) => entry.language.name === 'en'
-  )?.effect || ability?.flavor_text_entries?.find(
+  )?.effect || ability.flavor_text_entries?.find(
+    (entry: any) => entry.language.name === 'en'
+  )?.flavor_text;
+
+  const shortDescription = ability.flavor_text_entries?.find(
     (entry: any) => entry.language.name === 'en'
   )?.flavor_text;
 
   return (
-    <div className="group relative inline-block">
-      <span className="cursor-help border-b border-dotted border-gray-400 dark:border-gray-500">
-        {formatPokemonName(abilityName)}
-      </span>
-      {description && (
-        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 max-w-xs whitespace-normal">
-          {description}
-          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+    <div className="space-y-3">
+      {shortDescription && (
+        <div>
+          <h5 className="text-sm font-medium text-gray-900 dark:text-white mb-1">Description</h5>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            {shortDescription.replace(/\f/g, ' ')}
+          </p>
+        </div>
+      )}
+      
+      {description && description !== shortDescription && (
+        <div>
+          <h5 className="text-sm font-medium text-gray-900 dark:text-white mb-1">Detailed Effect</h5>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            {description.replace(/\f/g, ' ')}
+          </p>
+        </div>
+      )}
+
+      {ability.pokemon && ability.pokemon.length > 0 && (
+        <div>
+          <h5 className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+            Other Pokémon with this ability
+          </h5>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {ability.pokemon.length} Pokémon have this ability
+          </p>
         </div>
       )}
     </div>
@@ -87,6 +128,23 @@ export const PokemonDetailPage: React.FC = () => {
   const genus = species?.genera?.find(
     (entry: any) => entry.language.name === 'en'
   )?.genus;
+
+  // Prepare accordion items for abilities
+  const abilityAccordionItems = pokemon.abilities.map((ability) => ({
+    id: ability.ability.name,
+    title: formatPokemonName(ability.ability.name),
+    content: <AbilityContent abilityName={ability.ability.name} />,
+    icon: <Zap className="w-4 h-4" />,
+    badge: ability.is_hidden ? (
+      <span className="px-2 py-1 text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded-full">
+        Hidden
+      </span>
+    ) : (
+      <span className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
+        Slot {ability.slot}
+      </span>
+    )
+  }));
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -239,31 +297,19 @@ export const PokemonDetailPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Abilities Section */}
+      {/* Abilities Section with Accordion */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Abilities
         </h2>
-        <div className="grid gap-4">
-          {pokemon.abilities.map((ability) => (
-            <div 
-              key={ability.ability.name}
-              className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
-            >
-              <div>
-                <AbilityTooltip abilityName={ability.ability.name} />
-                {ability.is_hidden && (
-                  <span className="ml-2 px-2 py-1 text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 rounded">
-                    Hidden
-                  </span>
-                )}
-              </div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                Slot {ability.slot}
-              </span>
-            </div>
-          ))}
-        </div>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">
+          Click on an ability to learn more about its effects and description.
+        </p>
+        <Accordion 
+          items={abilityAccordionItems}
+          allowMultiple={false}
+          className="max-w-none"
+        />
       </div>
 
       {/* Evolution Chain */}
