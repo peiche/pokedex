@@ -78,6 +78,38 @@ export const useAbility = (name: string) => {
   });
 };
 
+// New hooks for abilities
+export const useAllAbilities = (page: number = 1, limit: number = 50) => {
+  const offset = (page - 1) * limit;
+  
+  return useQuery({
+    queryKey: ['all-abilities', page, limit],
+    queryFn: () => pokemonApi.getAllAbilities(offset, limit),
+    staleTime: 24 * 60 * 60 * 1000,
+    gcTime: 24 * 60 * 60 * 1000,
+  });
+};
+
+export const useSearchAbilities = (query: string) => {
+  return useQuery({
+    queryKey: ['search-abilities', query],
+    queryFn: () => pokemonApi.searchAbilities(query),
+    staleTime: 10 * 60 * 1000, // 10 minutes for search results
+    gcTime: 10 * 60 * 1000,
+    enabled: query.length > 0,
+  });
+};
+
+export const usePokemonWithAbility = (abilityName: string) => {
+  return useQuery({
+    queryKey: ['pokemon-with-ability', abilityName],
+    queryFn: () => pokemonApi.getPokemonWithAbility(abilityName),
+    staleTime: 24 * 60 * 60 * 1000,
+    gcTime: 24 * 60 * 60 * 1000,
+    enabled: !!abilityName,
+  });
+};
+
 export const useSearchPokemon = (query: string) => {
   return useQuery({
     queryKey: ['search-pokemon', query],

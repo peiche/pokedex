@@ -119,6 +119,61 @@ export const pokemonApi = {
     return response.json();
   },
 
+  // Get all abilities with pagination and search
+  getAllAbilities: async (offset = 0, limit = 50): Promise<any> => {
+    const response = await fetch(`${BASE_URL}/ability?offset=${offset}&limit=${limit}`);
+    if (!response.ok) throw new Error('Failed to fetch abilities');
+    return response.json();
+  },
+
+  // Search abilities by name
+  searchAbilities: async (query: string): Promise<any> => {
+    const response = await fetch(`${BASE_URL}/ability?limit=1000`);
+    if (!response.ok) throw new Error('Failed to search abilities');
+    const data = await response.json();
+    return data.results.filter((ability: any) => 
+      ability.name.toLowerCase().includes(query.toLowerCase())
+    );
+  },
+
+  // Get Pokemon with specific ability (with enhanced data)
+  getPokemonWithAbility: async (abilityName: string): Promise<{
+    ability: any;
+    pokemon: Array<{
+      pokemon: any;
+      isHidden: boolean;
+      slot: number;
+      pokemonData?: any;
+    }>;
+  }> => {
+    const abilityResponse = await fetch(`${BASE_URL}/ability/${abilityName}`);
+    if (!abilityResponse.ok) throw new Error('Failed to fetch ability');
+    const abilityData = await abilityResponse.json();
+
+    // Get detailed Pokemon data for each Pokemon with this ability
+    const pokemonWithDetails = await Promise.all(
+      abilityData.pokemon.map(async (pokemonEntry: any) => {
+        try {
+          const pokemonResponse = await fetch(pokemonEntry.pokemon.url);
+          const pokemonData = await pokemonResponse.json();
+          
+          return {
+            ...pokemonEntry,
+            pokemonData,
+          };
+        } catch (error) {
+          // If we can't fetch Pokemon data, return without it
+          return pokemonEntry;
+        }
+      })
+    );
+
+    return {
+      ability: abilityData,
+      pokemon: pokemonWithDetails,
+    };
+  },
+
   // Search Pokemon by name (using the list endpoint and filtering)
   searchPokemon: async (query: string): Promise<any> => {
     const response = await fetch(`${BASE_URL}/pokemon?limit=1000`);

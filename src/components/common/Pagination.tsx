@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 
 interface PaginationProps {
@@ -10,6 +10,7 @@ interface PaginationProps {
   showPageInfo?: boolean;
   totalItems?: number;
   itemsPerPage?: number;
+  onPageChange?: (page: number) => void; // For client-side pagination
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
@@ -19,8 +20,11 @@ export const Pagination: React.FC<PaginationProps> = ({
   className = '',
   showPageInfo = false,
   totalItems,
-  itemsPerPage = 20
+  itemsPerPage = 20,
+  onPageChange
 }) => {
+  const navigate = useNavigate();
+  
   // Don't render if there's only one page or no pages
   if (totalPages <= 1) return null;
 
@@ -35,8 +39,23 @@ export const Pagination: React.FC<PaginationProps> = ({
       return page === 1 ? baseUrl : `${baseUrl}/page/${page}`;
     }
     
+    // Handle abilities page (client-side pagination)
+    if (baseUrl === '/abilities') {
+      return `${baseUrl}?page=${page}`;
+    }
+    
     // Default case
     return page === 1 ? baseUrl : `${baseUrl}?page=${page}`;
+  };
+
+  const handlePageClick = (page: number) => {
+    if (onPageChange) {
+      // Client-side pagination
+      onPageChange(page);
+    } else {
+      // URL-based pagination
+      navigate(generatePageUrl(page));
+    }
   };
 
   const generatePageNumbers = (): (number | 'ellipsis')[] => {
@@ -96,6 +115,39 @@ export const Pagination: React.FC<PaginationProps> = ({
   const hasPrevious = currentPage > 1;
   const hasNext = currentPage < totalPages;
 
+  const PaginationButton: React.FC<{ 
+    page: number; 
+    disabled?: boolean; 
+    children: React.ReactNode;
+    className?: string;
+    'aria-label'?: string;
+  }> = ({ page, disabled = false, children, className: buttonClassName = '', 'aria-label': ariaLabel }) => {
+    if (onPageChange) {
+      return (
+        <button
+          onClick={() => !disabled && handlePageClick(page)}
+          disabled={disabled}
+          className={buttonClassName}
+          aria-label={ariaLabel}
+        >
+          {children}
+        </button>
+      );
+    }
+
+    return (
+      <Link
+        to={!disabled ? generatePageUrl(page) : '#'}
+        className={buttonClassName}
+        aria-disabled={disabled}
+        tabIndex={disabled ? -1 : 0}
+        aria-label={ariaLabel}
+      >
+        {children}
+      </Link>
+    );
+  };
+
   return (
     <nav 
       className={`flex flex-col items-center gap-4 ${className}`}
@@ -111,8 +163,10 @@ export const Pagination: React.FC<PaginationProps> = ({
       {/* Mobile pagination - Previous/Next only */}
       <div className="flex sm:hidden items-center justify-between w-full max-w-xs gap-4">
         {/* Previous button */}
-        <Link
-          to={hasPrevious ? generatePageUrl(currentPage - 1) : '#'}
+        <PaginationButton
+          page={currentPage - 1}
+          disabled={!hasPrevious}
+          aria-label="Go to previous page"
           className={`
             flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
             min-h-[44px] flex-1 justify-center
@@ -121,13 +175,10 @@ export const Pagination: React.FC<PaginationProps> = ({
               : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-gray-200 dark:border-gray-700 cursor-not-allowed'
             }
           `}
-          aria-disabled={!hasPrevious}
-          aria-label="Go to previous page"
-          tabIndex={hasPrevious ? 0 : -1}
         >
           <ChevronLeft className="w-4 h-4" />
           Previous
-        </Link>
+        </PaginationButton>
 
         {/* Page indicator */}
         <div className="text-sm text-gray-600 dark:text-gray-400 font-medium px-2">
@@ -135,8 +186,10 @@ export const Pagination: React.FC<PaginationProps> = ({
         </div>
 
         {/* Next button */}
-        <Link
-          to={hasNext ? generatePageUrl(currentPage + 1) : '#'}
+        <PaginationButton
+          page={currentPage + 1}
+          disabled={!hasNext}
+          aria-label="Go to next page"
           className={`
             flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
             min-h-[44px] flex-1 justify-center
@@ -145,20 +198,19 @@ export const Pagination: React.FC<PaginationProps> = ({
               : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-gray-200 dark:border-gray-700 cursor-not-allowed'
             }
           `}
-          aria-disabled={!hasNext}
-          aria-label="Go to next page"
-          tabIndex={hasNext ? 0 : -1}
         >
           Next
           <ChevronRight className="w-4 h-4" />
-        </Link>
+        </PaginationButton>
       </div>
 
       {/* Desktop pagination - Full pagination with page numbers */}
       <div className="hidden sm:flex items-center gap-1 md:gap-2">
         {/* Previous button */}
-        <Link
-          to={hasPrevious ? generatePageUrl(currentPage - 1) : '#'}
+        <PaginationButton
+          page={currentPage - 1}
+          disabled={!hasPrevious}
+          aria-label="Go to previous page"
           className={`
             flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all
             min-h-[44px] min-w-[44px] justify-center
@@ -167,13 +219,10 @@ export const Pagination: React.FC<PaginationProps> = ({
               : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-gray-200 dark:border-gray-700 cursor-not-allowed'
             }
           `}
-          aria-disabled={!hasPrevious}
-          aria-label="Go to previous page"
-          tabIndex={hasPrevious ? 0 : -1}
         >
           <ChevronLeft className="w-4 h-4" />
           <span className="hidden md:inline">Previous</span>
-        </Link>
+        </PaginationButton>
 
         {/* Page numbers */}
         <div className="flex items-center gap-1">
@@ -193,9 +242,10 @@ export const Pagination: React.FC<PaginationProps> = ({
             const isCurrentPage = page === currentPage;
             
             return (
-              <Link
+              <PaginationButton
                 key={page}
-                to={generatePageUrl(page)}
+                page={page}
+                aria-label={isCurrentPage ? `Current page, page ${page}` : `Go to page ${page}`}
                 className={`
                   flex items-center justify-center w-10 h-10 text-sm font-medium rounded-lg transition-all
                   min-h-[44px] min-w-[44px]
@@ -205,18 +255,18 @@ export const Pagination: React.FC<PaginationProps> = ({
                     : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
                   }
                 `}
-                aria-current={isCurrentPage ? 'page' : undefined}
-                aria-label={isCurrentPage ? `Current page, page ${page}` : `Go to page ${page}`}
               >
                 {page}
-              </Link>
+              </PaginationButton>
             );
           })}
         </div>
 
         {/* Next button */}
-        <Link
-          to={hasNext ? generatePageUrl(currentPage + 1) : '#'}
+        <PaginationButton
+          page={currentPage + 1}
+          disabled={!hasNext}
+          aria-label="Go to next page"
           className={`
             flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all
             min-h-[44px] min-w-[44px] justify-center
@@ -225,13 +275,10 @@ export const Pagination: React.FC<PaginationProps> = ({
               : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-gray-200 dark:border-gray-700 cursor-not-allowed'
             }
           `}
-          aria-disabled={!hasNext}
-          aria-label="Go to next page"
-          tabIndex={hasNext ? 0 : -1}
         >
           <span className="hidden md:inline">Next</span>
           <ChevronRight className="w-4 h-4" />
-        </Link>
+        </PaginationButton>
       </div>
     </nav>
   );

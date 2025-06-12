@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, ArrowLeft, Ruler, Weight, Zap } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowLeft, Ruler, Weight, Zap, ExternalLink } from 'lucide-react';
 import { usePokemon, usePokemonSpecies, useAbility } from '../hooks/usePokemon';
 import { TypeBadge } from '../components/common/TypeBadge';
 import { StatBar } from '../components/pokemon/StatBar';
@@ -45,7 +45,7 @@ const AbilityContent: React.FC<{ abilityName: string }> = ({ abilityName }) => {
   )?.flavor_text;
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {shortDescription && (
         <div>
           <h5 className="text-sm font-medium text-gray-900 dark:text-white mb-1">Description</h5>
@@ -66,12 +66,19 @@ const AbilityContent: React.FC<{ abilityName: string }> = ({ abilityName }) => {
 
       {ability.pokemon && ability.pokemon.length > 0 && (
         <div>
-          <h5 className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+          <h5 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
             Other Pokémon with this ability
           </h5>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
             {ability.pokemon.length} Pokémon have this ability
           </p>
+          <Link
+            to={`/ability/${abilityName}`}
+            className="inline-flex items-center gap-1 text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+          >
+            <span>See all Pokémon with this ability</span>
+            <ExternalLink className="w-3 h-3" />
+          </Link>
         </div>
       )}
     </div>
@@ -132,7 +139,17 @@ export const PokemonDetailPage: React.FC = () => {
   // Prepare accordion items for abilities
   const abilityAccordionItems = pokemon.abilities.map((ability) => ({
     id: ability.ability.name,
-    title: formatPokemonName(ability.ability.name),
+    title: (
+      <div className="flex items-center gap-2">
+        <Link
+          to={`/ability/${ability.ability.name}`}
+          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors font-medium"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {formatPokemonName(ability.ability.name)}
+        </Link>
+      </div>
+    ),
     content: <AbilityContent abilityName={ability.ability.name} />,
     icon: <Zap className="w-4 h-4" />,
     badge: ability.is_hidden ? (
@@ -303,7 +320,7 @@ export const PokemonDetailPage: React.FC = () => {
           Abilities
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">
-          Click on an ability to learn more about its effects and description.
+          Click on an ability to learn more about its effects and see other Pokémon that have it.
         </p>
         <Accordion 
           items={abilityAccordionItems}

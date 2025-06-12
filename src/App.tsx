@@ -7,6 +7,8 @@ import { HomePage } from './pages/HomePage';
 import { PokemonDetailPage } from './pages/PokemonDetailPage';
 import { TypesPage } from './pages/TypesPage';
 import { TypeDetailPage } from './pages/TypeDetailPage';
+import { AbilitiesPage } from './pages/AbilitiesPage';
+import { AbilityDetailPage } from './pages/AbilityDetailPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 
@@ -43,6 +45,8 @@ function App() {
                 <Route path="types" element={<TypesPage />} />
                 <Route path="type/:name" element={<TypeDetailPage />} />
                 <Route path="type/:name/page/:pageNumber" element={<TypeDetailPage />} />
+                <Route path="abilities" element={<AbilitiesPage />} />
+                <Route path="ability/:name" element={<AbilityDetailPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Routes>

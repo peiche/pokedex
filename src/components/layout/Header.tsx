@@ -76,6 +76,12 @@ export const Header: React.FC = () => {
             >
               Types
             </Link>
+            <Link 
+              to="/abilities" 
+              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              Abilities
+            </Link>
           </nav>
 
           {/* Search Bar */}
@@ -161,6 +167,13 @@ export const Header: React.FC = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Types
+              </Link>
+              <Link 
+                to="/abilities" 
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Abilities
               </Link>
               
               {/* Mobile Search */}
