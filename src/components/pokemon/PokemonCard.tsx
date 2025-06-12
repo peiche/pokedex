@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TypeBadge } from '../common/TypeBadge';
+import { usePokemon } from '../../hooks/usePokemon';
 import { formatPokemonName, extractIdFromUrl } from '../../utils/pokemon';
 
 interface PokemonCardProps {
@@ -17,6 +18,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
   const pokemonId = extractIdFromUrl(pokemon.url);
   const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
   const fallbackImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+
+  // Fetch Pokemon data to get types
+  const { data: pokemonData, isLoading: typesLoading } = usePokemon(pokemonId);
 
   return (
     <Link 
@@ -71,9 +75,27 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
             #{pokemonId.toString().padStart(3, '0')}
           </p>
 
-          {/* Types will be loaded separately for performance */}
-          <div className="flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+          {/* Types */}
+          <div className="flex justify-center gap-2 min-h-[24px]">
+            {typesLoading ? (
+              // Loading skeleton for types
+              <>
+                <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+                <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+              </>
+            ) : pokemonData?.types ? (
+              // Actual types
+              pokemonData.types.map((type) => (
+                <TypeBadge 
+                  key={type.type.name} 
+                  type={type.type.name} 
+                  size="sm"
+                />
+              ))
+            ) : (
+              // Fallback if no types available
+              <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+            )}
           </div>
         </div>
       </div>
