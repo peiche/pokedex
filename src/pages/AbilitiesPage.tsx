@@ -4,30 +4,31 @@ import { Search, Zap, Users, Filter, Grid, List } from 'lucide-react';
 import { useAllAbilities, useSearchAbilities } from '../hooks/usePokemon';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { Pagination } from '../components/common/Pagination';
-import { formatPokemonName, debounce } from '../utils/pokemon';
+import { formatPokemonName } from '../utils/pokemon';
 
 type ViewMode = 'grid' | 'list';
 type SortOption = 'name' | 'name-desc';
 
 export const AbilitiesPage: React.FC = () => {
+  const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('name');
-  const [showSearch, setShowSearch] = useState(false);
 
   const { data: allAbilitiesData, isLoading: isLoadingAll } = useAllAbilities(1, 1000); // Get all for sorting
   const { data: searchResults, isLoading: isSearching } = useSearchAbilities(searchQuery);
 
-  const debouncedSearch = debounce((query: string) => {
-    setSearchQuery(query);
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSearchQuery(searchInput.trim());
     setCurrentPage(1);
-  }, 300);
+  };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setShowSearch(value.length > 0);
-    debouncedSearch(value);
+  const handleClearSearch = () => {
+    setSearchInput('');
+    setSearchQuery('');
+    setCurrentPage(1);
   };
 
   // Process and sort abilities
@@ -146,21 +147,41 @@ export const AbilitiesPage: React.FC = () => {
 
       {/* Search and Filters */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-          {/* Search */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Search abilities..."
-              className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
-              onChange={handleSearchChange}
-              aria-label="Search for abilities"
-            />
-          </div>
+        <div className="flex flex-col gap-4">
+          {/* Search Form */}
+          <form onSubmit={handleSearchSubmit} className="flex gap-2">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Search abilities..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+                aria-label="Search for abilities"
+              />
+            </div>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
+              aria-label="Search abilities"
+            >
+              Search
+            </button>
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
+                aria-label="Clear search"
+              >
+                Clear
+              </button>
+            )}
+          </form>
 
           {/* Controls */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             {/* Sort */}
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-500" />
@@ -243,9 +264,15 @@ export const AbilitiesPage: React.FC = () => {
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
             No abilities found
           </h3>
-          <p className="text-gray-600 dark:text-gray-400">
-            Try adjusting your search terms or browse all abilities.
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            No abilities match your search for "{searchQuery}".
           </p>
+          <button
+            onClick={handleClearSearch}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Clear search and browse all abilities
+          </button>
         </div>
       ) : (
         <div className="text-center py-12">
