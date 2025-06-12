@@ -1,5 +1,6 @@
 import React from 'react';
 import { PokemonCard } from './PokemonCard';
+import { PokemonListItem } from './PokemonListItem';
 import { SkeletonGrid } from '../common/SkeletonCard';
 
 interface PokemonGridProps {
@@ -8,11 +9,28 @@ interface PokemonGridProps {
     url: string;
   }>;
   isLoading?: boolean;
+  viewMode?: 'grid' | 'list';
 }
 
-export const PokemonGrid: React.FC<PokemonGridProps> = ({ pokemon, isLoading }) => {
+export const PokemonGrid: React.FC<PokemonGridProps> = ({ 
+  pokemon, 
+  isLoading, 
+  viewMode = 'grid' 
+}) => {
   if (isLoading) {
     return <SkeletonGrid />;
+  }
+
+  if (viewMode === 'list') {
+    return (
+      <div className="space-y-3" role="list" aria-label="Pokémon list">
+        {pokemon.map((poke) => (
+          <div key={poke.name} role="listitem">
+            <PokemonListItem pokemon={poke} />
+          </div>
+        ))}
+      </div>
+    );
   }
 
   return (
