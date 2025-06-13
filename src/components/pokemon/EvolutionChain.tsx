@@ -4,6 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import { useEvolutionChain, usePokemon } from '../../hooks/usePokemon';
 import { formatPokemonName, extractIdFromUrl } from '../../utils/pokemon';
 import { LoadingSpinner } from '../common/LoadingSpinner';
+import { PokeAPI } from 'pokeapi-types';
 
 interface EvolutionChainProps {
   speciesUrl: string;
@@ -80,7 +81,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ speciesUrl }) =>
     );
   }
 
-  const buildEvolutionTree = (chain: any): any[] => {
+  const buildEvolutionTree = (chain: PokeAPI.ChainLink) => {
     const evolutions = [];
     let current = chain;
 

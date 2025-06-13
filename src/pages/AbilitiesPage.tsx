@@ -5,6 +5,7 @@ import { useAllAbilities, useSearchAbilities } from '../hooks/usePokemon';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { Pagination } from '../components/common/Pagination';
 import { formatPokemonName } from '../utils/pokemon';
+import { PokeAPI } from 'pokeapi-types';
 
 type ViewMode = 'grid' | 'list';
 type SortOption = 'name' | 'name-desc';
@@ -38,7 +39,7 @@ export const AbilitiesPage: React.FC = () => {
     if (!abilities) return [];
 
     // Sort abilities based on selected option
-    return abilities.sort((a: any, b: any) => {
+    return abilities.sort((a, b) => {
       switch (sortBy) {
         case 'name':
           return a.name.localeCompare(b.name);
@@ -72,7 +73,7 @@ export const AbilitiesPage: React.FC = () => {
     );
   }
 
-  const AbilityCard: React.FC<{ ability: any }> = ({ ability }) => (
+  const AbilityCard: React.FC<{ ability: PokeAPI.NamedAPIResource }> = ({ ability }) => (
     <Link
       to={`/ability/${ability.name}`}
       className="group block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:scale-105 transition-all duration-300 overflow-hidden"
@@ -99,7 +100,7 @@ export const AbilitiesPage: React.FC = () => {
     </Link>
   );
 
-  const AbilityListItem: React.FC<{ ability: any }> = ({ ability }) => (
+  const AbilityListItem: React.FC<{ ability: PokeAPI.NamedAPIResource }> = ({ ability }) => (
     <Link
       to={`/ability/${ability.name}`}
       className="group block bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200"

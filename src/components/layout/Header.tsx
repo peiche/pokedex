@@ -100,7 +100,7 @@ export const Header: React.FC = () => {
                     <div className="p-4 text-center text-gray-500">Searching...</div>
                   ) : searchResults && searchResults.length > 0 ? (
                     <ul role="listbox" aria-label="Search results">
-                      {searchResults.map((pokemon: any) => (
+                      {searchResults.map((pokemon) => (
                         <li key={pokemon.name}>
                           <button
                             className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-700"

@@ -35,13 +35,13 @@ const AbilityContent: React.FC<{ abilityName: string }> = ({ abilityName }) => {
   }
 
   const description = ability.effect_entries?.find(
-    (entry: any) => entry.language.name === 'en'
+    (entry) => entry.language.name === 'en'
   )?.effect || ability.flavor_text_entries?.find(
-    (entry: any) => entry.language.name === 'en'
+    (entry) => entry.language.name === 'en'
   )?.flavor_text;
 
   const shortDescription = ability.flavor_text_entries?.find(
-    (entry: any) => entry.language.name === 'en'
+    (entry) => entry.language.name === 'en'
   )?.flavor_text;
 
   return (
@@ -129,11 +129,11 @@ export const PokemonDetailPage: React.FC = () => {
                    pokemon.sprites?.front_default;
 
   const description = species?.flavor_text_entries?.find(
-    (entry: any) => entry.language.name === 'en'
+    (entry) => entry.language.name === 'en'
   )?.flavor_text?.replace(/\f/g, ' ');
 
   const genus = species?.genera?.find(
-    (entry: any) => entry.language.name === 'en'
+    (entry) => entry.language.name === 'en'
   )?.genus;
 
   // Prepare accordion items for abilities

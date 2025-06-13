@@ -78,9 +78,9 @@ export const getPokemonGeneration = (id: number): number => {
 };
 
 // Debounce function for search
-export const debounce = <T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: string[]) => void>(
   func: T,
-  wait: number
+  wait: number,
 ): ((...args: Parameters<T>) => void) => {
   let timeout: NodeJS.Timeout;
   return (...args: Parameters<T>) => {

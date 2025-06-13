@@ -106,7 +106,7 @@ export const PokemonListItem: React.FC<PokemonListItemProps> = ({ pokemon }) => 
             <div className="hidden lg:block text-right">
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Total Stats</div>
               <div className="font-semibold text-gray-900 dark:text-white">
-                {pokemonData.stats.reduce((sum: number, stat: any) => sum + stat.base_stat, 0)}
+                {pokemonData.stats.reduce((sum: number, stat) => sum + stat.base_stat, 0)}
               </div>
             </div>
           )}

@@ -1,36 +1,38 @@
+import { PokeAPI } from "pokeapi-types";
+
 const BASE_URL = 'https://pokeapi.co/api/v2';
 
 export const pokemonApi = {
   // Get list of Pokemon with pagination
-  getPokemonList: async (offset = 0, limit = 20): Promise<any> => {
+  getPokemonList: async (offset = 0, limit = 20): Promise<PokeAPI.NamedAPIResourceList> => {
     const response = await fetch(`${BASE_URL}/pokemon?offset=${offset}&limit=${limit}`);
     if (!response.ok) throw new Error('Failed to fetch Pokemon list');
     return response.json();
   },
 
   // Get individual Pokemon data
-  getPokemon: async (id: string | number): Promise<any> => {
+  getPokemon: async (id: string | number): Promise<PokeAPI.Pokemon> => {
     const response = await fetch(`${BASE_URL}/pokemon/${id}`);
     if (!response.ok) throw new Error('Failed to fetch Pokemon');
     return response.json();
   },
 
   // Get Pokemon species data
-  getPokemonSpecies: async (id: string | number): Promise<any> => {
+  getPokemonSpecies: async (id: string | number): Promise<PokeAPI.PokemonSpecies> => {
     const response = await fetch(`${BASE_URL}/pokemon-species/${id}`);
     if (!response.ok) throw new Error('Failed to fetch Pokemon species');
     return response.json();
   },
 
   // Get evolution chain
-  getEvolutionChain: async (id: string | number): Promise<any> => {
+  getEvolutionChain: async (id: string | number): Promise<PokeAPI.EvolutionChain> => {
     const response = await fetch(`${BASE_URL}/evolution-chain/${id}`);
     if (!response.ok) throw new Error('Failed to fetch evolution chain');
     return response.json();
   },
 
   // Get Pokemon type data
-  getPokemonType: async (name: string): Promise<any> => {
+  getPokemonType: async (name: string): Promise<PokeAPI.TypePokemon> => {
     const response = await fetch(`${BASE_URL}/type/${name}`);
     if (!response.ok) throw new Error('Failed to fetch Pokemon type');
     return response.json();
@@ -48,7 +50,7 @@ export const pokemonApi = {
       nextPage: number | null;
       previousPage: number | null;
     };
-    typeInfo: any;
+    typeInfo: PokeAPI.Type;
   }> => {
     // Validate page number
     if (!Number.isInteger(page) || page < 1) {
@@ -61,11 +63,11 @@ export const pokemonApi = {
       throw new Error(`Failed to fetch type: ${typeName}`);
     }
     
-    const typeData = await typeResponse.json();
+    const typeData: PokeAPI.Type = await typeResponse.json();
     const allPokemon = typeData.pokemon;
     
     // Sort Pokemon consistently by ID (extracted from URL) to ensure stable pagination
-    const sortedPokemon = allPokemon.sort((a: any, b: any) => {
+    const sortedPokemon = allPokemon.sort((a, b) => {
       const idA = parseInt(a.pokemon.url.split('/').slice(-2, -1)[0]);
       const idB = parseInt(b.pokemon.url.split('/').slice(-2, -1)[0]);
       return idA - idB;
@@ -97,73 +99,69 @@ export const pokemonApi = {
         nextPage: hasNextPage ? page + 1 : null,
         previousPage: hasPreviousPage ? page - 1 : null,
       },
-      typeInfo: {
-        id: typeData.id,
-        name: typeData.name,
-        damage_relations: typeData.damage_relations,
-      }
+      typeInfo: typeData,
     };
   },
 
   // Get all types
-  getAllTypes: async (): Promise<any> => {
+  getAllTypes: async (): Promise<PokeAPI.NamedAPIResourceList> => {
     const response = await fetch(`${BASE_URL}/type`);
     if (!response.ok) throw new Error('Failed to fetch types');
     return response.json();
   },
 
   // Get ability details
-  getAbility: async (name: string): Promise<any> => {
+  getAbility: async (name: string): Promise<PokeAPI.Ability> => {
     const response = await fetch(`${BASE_URL}/ability/${name}`);
     if (!response.ok) throw new Error('Failed to fetch ability');
     return response.json();
   },
 
   // Get all abilities with pagination and search
-  getAllAbilities: async (offset = 0, limit = 50): Promise<any> => {
+  getAllAbilities: async (offset = 0, limit = 50): Promise<PokeAPI.NamedAPIResourceList> => {
     const response = await fetch(`${BASE_URL}/ability?offset=${offset}&limit=${limit}`);
     if (!response.ok) throw new Error('Failed to fetch abilities');
     return response.json();
   },
 
   // Search abilities by name
-  searchAbilities: async (query: string): Promise<any> => {
+  searchAbilities: async (query: string): Promise<PokeAPI.NamedAPIResource[]> => {
     const response = await fetch(`${BASE_URL}/ability?limit=1000`);
     if (!response.ok) throw new Error('Failed to search abilities');
-    const data = await response.json();
-    return data.results.filter((ability: any) => 
+    const data: PokeAPI.NamedAPIResourceList = await response.json();
+    return data.results.filter((ability) => 
       ability.name.toLowerCase().includes(query.toLowerCase())
     );
   },
 
   // Get Pokemon with specific ability (with enhanced data)
   getPokemonWithAbility: async (abilityName: string): Promise<{
-    ability: any;
+    ability: PokeAPI.Ability;
     pokemon: Array<{
-      pokemon: any;
-      isHidden: boolean;
-      slot: number;
-      pokemonData?: any;
+      pokemon: PokeAPI.AbilityPokemon;
+      pokemonData?: PokeAPI.Pokemon;
     }>;
   }> => {
     const abilityResponse = await fetch(`${BASE_URL}/ability/${abilityName}`);
     if (!abilityResponse.ok) throw new Error('Failed to fetch ability');
-    const abilityData = await abilityResponse.json();
+    const abilityData: PokeAPI.Ability = await abilityResponse.json();
 
     // Get detailed Pokemon data for each Pokemon with this ability
     const pokemonWithDetails = await Promise.all(
-      abilityData.pokemon.map(async (pokemonEntry: any) => {
+      abilityData.pokemon.map(async (pokemonEntry) => {
         try {
           const pokemonResponse = await fetch(pokemonEntry.pokemon.url);
-          const pokemonData = await pokemonResponse.json();
+          const pokemonData: PokeAPI.Pokemon = await pokemonResponse.json();
           
           return {
-            ...pokemonEntry,
+            pokemon: pokemonEntry,
             pokemonData,
           };
-        } catch (error) {
+        } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
           // If we can't fetch Pokemon data, return without it
-          return pokemonEntry;
+          return {
+            pokemon: pokemonEntry,
+          };
         }
       })
     );
@@ -175,11 +173,11 @@ export const pokemonApi = {
   },
 
   // Search Pokemon by name (using the list endpoint and filtering)
-  searchPokemon: async (query: string): Promise<any> => {
+  searchPokemon: async (query: string): Promise<PokeAPI.NamedAPIResource[]> => {
     const response = await fetch(`${BASE_URL}/pokemon?limit=1000`);
     if (!response.ok) throw new Error('Failed to search Pokemon');
-    const data = await response.json();
-    return data.results.filter((pokemon: any) => 
+    const data: PokeAPI.NamedAPIResourceList = await response.json();
+    return data.results.filter((pokemon) => 
       pokemon.name.toLowerCase().includes(query.toLowerCase())
     ).slice(0, 10); // Limit to 10 results for autocomplete
   }

@@ -4,11 +4,11 @@ import { ArrowLeft, Zap, Eye, EyeOff, Filter, Grid, List } from 'lucide-react';
 import { usePokemonWithAbility } from '../hooks/usePokemon';
 import { TypeBadge } from '../components/common/TypeBadge';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
-import { 
-  formatPokemonName, 
+import {
+  formatPokemonName,
   extractIdFromUrl,
-  formatStatName 
 } from '../utils/pokemon';
+import { PokeAPI } from 'pokeapi-types';
 
 type ViewMode = 'grid' | 'list';
 type SortOption = 'pokedex' | 'name' | 'type';
@@ -19,7 +19,7 @@ export const AbilityDetailPage: React.FC = () => {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('pokedex');
   const [filterBy, setFilterBy] = useState<FilterOption>('all');
-  
+
   const { data, isLoading, error } = usePokemonWithAbility(name!);
 
   // Process and sort Pokemon
@@ -30,28 +30,31 @@ export const AbilityDetailPage: React.FC = () => {
 
     // Filter by ability type
     if (filterBy === 'primary') {
-      filtered = filtered.filter(p => !p.isHidden);
+      filtered = filtered.filter(p => !p.pokemon.is_hidden);
     } else if (filterBy === 'hidden') {
-      filtered = filtered.filter(p => p.isHidden);
+      filtered = filtered.filter(p => p.pokemon.is_hidden);
     }
 
     // Sort Pokemon
     return filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'pokedex':
-          const idA = extractIdFromUrl(a.pokemon.url);
-          const idB = extractIdFromUrl(b.pokemon.url);
+        case 'pokedex': {
+          const idA = extractIdFromUrl(a.pokemon.pokemon.url);
+          const idB = extractIdFromUrl(b.pokemon.pokemon.url);
           return idA - idB;
-        case 'name':
-          return a.pokemon.name.localeCompare(b.pokemon.name);
-        case 'type':
+        }
+        case 'name': {
+          return a.pokemon.pokemon.name.localeCompare(b.pokemon.pokemon.name);
+        }
+        case 'type': {
           // Sort by primary type, then by name
           const typeA = a.pokemonData?.types?.[0]?.type?.name || 'zzz';
           const typeB = b.pokemonData?.types?.[0]?.type?.name || 'zzz';
           if (typeA !== typeB) {
             return typeA.localeCompare(typeB);
           }
-          return a.pokemon.name.localeCompare(b.pokemon.name);
+          return a.pokemon.pokemon.name.localeCompare(b.pokemon.pokemon.name);
+        }
         default:
           return 0;
       }
@@ -87,20 +90,25 @@ export const AbilityDetailPage: React.FC = () => {
   }
 
   const { ability, pokemon } = data;
-  
+
   const description = ability.effect_entries?.find(
-    (entry: any) => entry.language.name === 'en'
+    (entry) => entry.language.name === 'en'
   )?.effect;
 
   const shortDescription = ability.flavor_text_entries?.find(
-    (entry: any) => entry.language.name === 'en'
+    (entry) => entry.language.name === 'en'
   )?.flavor_text;
 
-  const primaryCount = pokemon.filter(p => !p.isHidden).length;
-  const hiddenCount = pokemon.filter(p => p.isHidden).length;
+  const primaryCount = pokemon.filter(p => !p.pokemon.is_hidden).length;
+  const hiddenCount = pokemon.filter(p => p.pokemon.is_hidden).length;
 
-  const PokemonCard: React.FC<{ pokemonEntry: any }> = ({ pokemonEntry }) => {
-    const pokemonId = extractIdFromUrl(pokemonEntry.pokemon.url);
+  const PokemonCard: React.FC<{
+    pokemonEntry: {
+      pokemon: PokeAPI.AbilityPokemon;
+      pokemonData?: PokeAPI.Pokemon;
+    }
+  }> = ({ pokemonEntry }) => {
+    const pokemonId = extractIdFromUrl(pokemonEntry.pokemon.pokemon.url);
     const pokemonData = pokemonEntry.pokemonData;
     const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
 
@@ -108,18 +116,18 @@ export const AbilityDetailPage: React.FC = () => {
       <Link
         to={`/pokemon/${pokemonId}`}
         className="group block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:scale-105 transition-all duration-300 overflow-hidden"
-        aria-label={`View details for ${formatPokemonName(pokemonEntry.pokemon.name)}`}
+        aria-label={`View details for ${formatPokemonName(pokemonEntry.pokemon.pokemon.name)}`}
       >
         <div className="p-6">
           {/* Pokemon Image */}
           <div className="relative w-24 h-24 mx-auto mb-4">
             <img
               src={imageUrl}
-              alt={formatPokemonName(pokemonEntry.pokemon.name)}
+              alt={formatPokemonName(pokemonEntry.pokemon.pokemon.name)}
               className="w-full h-full object-contain"
               loading="lazy"
             />
-            {pokemonEntry.isHidden && (
+            {pokemonEntry.pokemon.is_hidden && (
               <div className="absolute -top-2 -right-2 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
                 <EyeOff className="w-3 h-3 text-white" />
               </div>
@@ -129,9 +137,9 @@ export const AbilityDetailPage: React.FC = () => {
           {/* Pokemon Info */}
           <div className="text-center">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-              {formatPokemonName(pokemonEntry.pokemon.name)}
+              {formatPokemonName(pokemonEntry.pokemon.pokemon.name)}
             </h3>
-            
+
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
               #{pokemonId.toString().padStart(3, '0')}
             </p>
@@ -139,10 +147,10 @@ export const AbilityDetailPage: React.FC = () => {
             {/* Types */}
             {pokemonData?.types && (
               <div className="flex justify-center gap-1 mb-2">
-                {pokemonData.types.map((type: any) => (
-                  <TypeBadge 
-                    key={type.type.name} 
-                    type={type.type.name} 
+                {pokemonData.types.map((type) => (
+                  <TypeBadge
+                    key={type.type.name}
+                    type={type.type.name}
                     size="sm"
                   />
                 ))}
@@ -151,12 +159,11 @@ export const AbilityDetailPage: React.FC = () => {
 
             {/* Ability Type Badge */}
             <div className="flex justify-center">
-              <span className={`px-2 py-1 text-xs rounded-full ${
-                pokemonEntry.isHidden
-                  ? 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
-                  : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
-              }`}>
-                {pokemonEntry.isHidden ? 'Hidden Ability' : 'Primary Ability'}
+              <span className={`px-2 py-1 text-xs rounded-full ${pokemonEntry.pokemon.is_hidden
+                ? 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
+                : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
+                }`}>
+                {pokemonEntry.pokemon.is_hidden ? 'Hidden Ability' : 'Primary Ability'}
               </span>
             </div>
           </div>
@@ -165,8 +172,13 @@ export const AbilityDetailPage: React.FC = () => {
     );
   };
 
-  const PokemonListItem: React.FC<{ pokemonEntry: any }> = ({ pokemonEntry }) => {
-    const pokemonId = extractIdFromUrl(pokemonEntry.pokemon.url);
+  const PokemonListItem: React.FC<{
+    pokemonEntry: {
+      pokemon: PokeAPI.AbilityPokemon;
+      pokemonData?: PokeAPI.Pokemon;
+    }
+  }> = ({ pokemonEntry }) => {
+    const pokemonId = extractIdFromUrl(pokemonEntry.pokemon.pokemon.url);
     const pokemonData = pokemonEntry.pokemonData;
     const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
 
@@ -174,7 +186,7 @@ export const AbilityDetailPage: React.FC = () => {
       <Link
         to={`/pokemon/${pokemonId}`}
         className="group block bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200"
-        aria-label={`View details for ${formatPokemonName(pokemonEntry.pokemon.name)}`}
+        aria-label={`View details for ${formatPokemonName(pokemonEntry.pokemon.pokemon.name)}`}
       >
         <div className="p-4">
           <div className="flex items-center gap-4">
@@ -182,11 +194,11 @@ export const AbilityDetailPage: React.FC = () => {
             <div className="relative flex-shrink-0 w-16 h-16">
               <img
                 src={imageUrl}
-                alt={formatPokemonName(pokemonEntry.pokemon.name)}
+                alt={formatPokemonName(pokemonEntry.pokemon.pokemon.name)}
                 className="w-full h-full object-contain"
                 loading="lazy"
               />
-              {pokemonEntry.isHidden && (
+              {pokemonEntry.pokemon.is_hidden && (
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-purple-500 rounded-full flex items-center justify-center">
                   <EyeOff className="w-2 h-2 text-white" />
                 </div>
@@ -197,7 +209,7 @@ export const AbilityDetailPage: React.FC = () => {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-3 mb-2">
                 <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  {formatPokemonName(pokemonEntry.pokemon.name)}
+                  {formatPokemonName(pokemonEntry.pokemon.pokemon.name)}
                 </h3>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   #{pokemonId.toString().padStart(3, '0')}
@@ -208,10 +220,10 @@ export const AbilityDetailPage: React.FC = () => {
                 {/* Types */}
                 {pokemonData?.types && (
                   <div className="flex gap-1">
-                    {pokemonData.types.map((type: any) => (
-                      <TypeBadge 
-                        key={type.type.name} 
-                        type={type.type.name} 
+                    {pokemonData.types.map((type) => (
+                      <TypeBadge
+                        key={type.type.name}
+                        type={type.type.name}
                         size="sm"
                       />
                     ))}
@@ -219,12 +231,11 @@ export const AbilityDetailPage: React.FC = () => {
                 )}
 
                 {/* Ability Type */}
-                <span className={`px-2 py-1 text-xs rounded-full ${
-                  pokemonEntry.isHidden
-                    ? 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
-                    : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
-                }`}>
-                  {pokemonEntry.isHidden ? 'Hidden' : 'Primary'}
+                <span className={`px-2 py-1 text-xs rounded-full ${pokemonEntry.pokemon.is_hidden
+                  ? 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
+                  : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
+                  }`}>
+                  {pokemonEntry.pokemon.is_hidden ? 'Hidden' : 'Primary'}
                 </span>
               </div>
             </div>
@@ -234,7 +245,7 @@ export const AbilityDetailPage: React.FC = () => {
               <div className="hidden lg:block text-right">
                 <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Total Stats</div>
                 <div className="font-semibold text-gray-900 dark:text-white">
-                  {pokemonData.stats.reduce((sum: number, stat: any) => sum + stat.base_stat, 0)}
+                  {pokemonData.stats.reduce((sum: number, stat) => sum + stat.base_stat, 0)}
                 </div>
               </div>
             )}
@@ -261,7 +272,7 @@ export const AbilityDetailPage: React.FC = () => {
           <div className="flex-shrink-0 w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
             <Zap className="w-8 h-8" />
           </div>
-          
+
           <div className="flex-1">
             <h1 className="text-4xl font-bold mb-2">
               {formatPokemonName(name!)}
@@ -269,7 +280,7 @@ export const AbilityDetailPage: React.FC = () => {
             <p className="text-xl opacity-90 mb-4">
               {pokemon.length} Pokémon have this ability
             </p>
-            
+
             <div className="flex gap-4 text-sm">
               <div className="bg-white/20 rounded-lg px-3 py-2">
                 <div className="flex items-center gap-2">
@@ -293,7 +304,7 @@ export const AbilityDetailPage: React.FC = () => {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Ability Description
         </h2>
-        
+
         <div className="space-y-4">
           {shortDescription && (
             <div>
@@ -305,7 +316,7 @@ export const AbilityDetailPage: React.FC = () => {
               </p>
             </div>
           )}
-          
+
           {description && description !== shortDescription && (
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
@@ -355,22 +366,20 @@ export const AbilityDetailPage: React.FC = () => {
           <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-md transition-colors ${
-                viewMode === 'grid'
-                  ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-              }`}
+              className={`p-2 rounded-md transition-colors ${viewMode === 'grid'
+                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
               aria-label="Grid view"
             >
               <Grid className="w-4 h-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded-md transition-colors ${
-                viewMode === 'list'
-                  ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-              }`}
+              className={`p-2 rounded-md transition-colors ${viewMode === 'list'
+                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
               aria-label="List view"
             >
               <List className="w-4 h-4" />
@@ -384,18 +393,18 @@ export const AbilityDetailPage: React.FC = () => {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Pokémon with {formatPokemonName(name!)}
         </h2>
-        
+
         {processedPokemon.length > 0 ? (
           viewMode === 'grid' ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
               {processedPokemon.map((pokemonEntry) => (
-                <PokemonCard key={`${pokemonEntry.pokemon.name}-${pokemonEntry.isHidden}`} pokemonEntry={pokemonEntry} />
+                <PokemonCard key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
               ))}
             </div>
           ) : (
             <div className="space-y-3">
               {processedPokemon.map((pokemonEntry) => (
-                <PokemonListItem key={`${pokemonEntry.pokemon.name}-${pokemonEntry.isHidden}`} pokemonEntry={pokemonEntry} />
+                <PokemonListItem key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
               ))}
             </div>
           )

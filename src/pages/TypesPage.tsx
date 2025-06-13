@@ -30,7 +30,7 @@ export const TypesPage: React.FC = () => {
   }
 
   // Filter out unknown and shadow types
-  const mainTypes = typesData.results.filter((type: any) => 
+  const mainTypes = typesData.results.filter((type) => 
     !['unknown', 'shadow'].includes(type.name)
   );
 
@@ -48,7 +48,7 @@ export const TypesPage: React.FC = () => {
 
       {/* Types Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {mainTypes.map((type: any) => (
+        {mainTypes.map((type) => (
           <Link
             key={type.name}
             to={`/type/${type.name}`}

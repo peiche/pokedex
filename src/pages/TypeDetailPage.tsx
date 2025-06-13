@@ -130,7 +130,7 @@ export const TypeDetailPage: React.FC = () => {
   const textColor = getTextColorForBackground(backgroundColor);
 
   // Convert Pokemon data to the format expected by PokemonGrid
-  const pokemonList = paginatedPokemon.map((p: any) => ({
+  const pokemonList = paginatedPokemon.map((p) => ({
     name: p.pokemon.name,
     url: p.pokemon.url
   }));
