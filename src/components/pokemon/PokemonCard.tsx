@@ -25,7 +25,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
   return (
     <Link 
       to={`/pokemon/${pokemonId}`}
-      className="group block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:scale-105 transition-all duration-300 overflow-hidden"
+      className="group block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300 overflow-hidden"
       aria-label={`View details for ${formatPokemonName(pokemon.name)}`}
     >
       <div className="p-6">

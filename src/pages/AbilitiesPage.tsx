@@ -76,7 +76,7 @@ export const AbilitiesPage: React.FC = () => {
   const AbilityCard: React.FC<{ ability: PokeAPI.NamedAPIResource }> = ({ ability }) => (
     <Link
       to={`/ability/${ability.name}`}
-      className="group block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:scale-105 transition-all duration-300 overflow-hidden"
+      className="group block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300 overflow-hidden"
       aria-label={`View details for ${formatPokemonName(ability.name)} ability`}
     >
       <div className="p-6">
@@ -103,7 +103,7 @@ export const AbilitiesPage: React.FC = () => {
   const AbilityListItem: React.FC<{ ability: PokeAPI.NamedAPIResource }> = ({ ability }) => (
     <Link
       to={`/ability/${ability.name}`}
-      className="group block bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200"
+      className="group block bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-border-light dark:border-gray-700 hover:shadow-md hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-200"
       aria-label={`View details for ${formatPokemonName(ability.name)} ability`}
     >
       <div className="p-4">
@@ -147,7 +147,7 @@ export const AbilitiesPage: React.FC = () => {
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 p-6">
         <div className="flex flex-col gap-4">
           {/* Search Form */}
           <form onSubmit={handleSearchSubmit} className="flex gap-2">
@@ -158,13 +158,13 @@ export const AbilitiesPage: React.FC = () => {
                 placeholder="Search abilities..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
                 aria-label="Search for abilities"
               />
             </div>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors border border-blue-700"
               aria-label="Search abilities"
             >
               Search
@@ -173,7 +173,7 @@ export const AbilitiesPage: React.FC = () => {
               <button
                 type="button"
                 onClick={handleClearSearch}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
+                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors border border-gray-600"
                 aria-label="Clear search"
               >
                 Clear
@@ -189,7 +189,7 @@ export const AbilitiesPage: React.FC = () => {
               <select
                 value={sortBy}
                 onChange={(e) => handleSortChange(e.target.value as SortOption)}
-                className="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
                 aria-label="Sort abilities"
               >
                 <option value="name">Sort A-Z</option>
@@ -198,12 +198,12 @@ export const AbilitiesPage: React.FC = () => {
             </div>
 
             {/* View Mode */}
-            <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+            <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1 border border-border-light dark:border-gray-600">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`p-2 rounded-md transition-colors ${
                   viewMode === 'grid'
-                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
                 aria-label="Grid view"
@@ -214,7 +214,7 @@ export const AbilitiesPage: React.FC = () => {
                 onClick={() => setViewMode('list')}
                 className={`p-2 rounded-md transition-colors ${
                   viewMode === 'list'
-                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
                 aria-label="List view"
@@ -270,7 +270,7 @@ export const AbilitiesPage: React.FC = () => {
           </p>
           <button
             onClick={handleClearSearch}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
           >
             Clear search and browse all abilities
           </button>
@@ -282,7 +282,7 @@ export const AbilitiesPage: React.FC = () => {
       )}
 
       {/* About Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           About Pokémon Abilities
         </h2>

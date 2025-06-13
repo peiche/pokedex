@@ -171,8 +171,8 @@ export const Pagination: React.FC<PaginationProps> = ({
             flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
             min-h-[44px] flex-1 justify-center
             ${hasPrevious
-              ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900'
-              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-gray-200 dark:border-gray-700 cursor-not-allowed'
+              ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-border-light dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-border-light-hover dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-border-light dark:border-gray-700 cursor-not-allowed'
             }
           `}
         >
@@ -194,8 +194,8 @@ export const Pagination: React.FC<PaginationProps> = ({
             flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
             min-h-[44px] flex-1 justify-center
             ${hasNext
-              ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900'
-              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-gray-200 dark:border-gray-700 cursor-not-allowed'
+              ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-border-light dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-border-light-hover dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-border-light dark:border-gray-700 cursor-not-allowed'
             }
           `}
         >
@@ -215,8 +215,8 @@ export const Pagination: React.FC<PaginationProps> = ({
             flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all
             min-h-[44px] min-w-[44px] justify-center
             ${hasPrevious
-              ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900'
-              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-gray-200 dark:border-gray-700 cursor-not-allowed'
+              ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-border-light dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-border-light-hover dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-border-light dark:border-gray-700 cursor-not-allowed'
             }
           `}
         >
@@ -252,7 +252,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900
                   ${isCurrentPage
                     ? 'bg-blue-600 text-white shadow-lg hover:bg-blue-700'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-border-light dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-border-light-hover dark:hover:border-gray-500'
                   }
                 `}
               >
@@ -271,8 +271,8 @@ export const Pagination: React.FC<PaginationProps> = ({
             flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all
             min-h-[44px] min-w-[44px] justify-center
             ${hasNext
-              ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900'
-              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-gray-200 dark:border-gray-700 cursor-not-allowed'
+              ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-border-light dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-border-light-hover dark:hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900'
+              : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border border-border-light dark:border-gray-700 cursor-not-allowed'
             }
           `}
         >

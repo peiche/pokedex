@@ -25,7 +25,7 @@ export const PokemonListItem: React.FC<PokemonListItemProps> = ({ pokemon }) => 
   return (
     <Link 
       to={`/pokemon/${pokemonId}`}
-      className="group block bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200"
+      className="group block bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-border-light dark:border-gray-700 hover:shadow-md hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-200"
       aria-label={`View details for ${formatPokemonName(pokemon.name)}`}
     >
       <div className="p-4">

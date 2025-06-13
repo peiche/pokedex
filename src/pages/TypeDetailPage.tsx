@@ -110,7 +110,7 @@ export const TypeDetailPage: React.FC = () => {
         <div className="space-y-4">
           <Link
             to={`/type/${name}`}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Type Overview
@@ -166,7 +166,7 @@ export const TypeDetailPage: React.FC = () => {
       {/* Navigation */}
       <Link
         to="/types"
-        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-border-light dark:border-gray-700"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Types
@@ -193,7 +193,7 @@ export const TypeDetailPage: React.FC = () => {
       </div>
 
       {/* Type Effectiveness Chart */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Type Effectiveness
         </h2>
@@ -259,7 +259,7 @@ export const TypeDetailPage: React.FC = () => {
       </div>
 
       {/* Filters and Controls */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 p-6">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex flex-wrap items-center gap-4">
             {/* Filter */}
@@ -268,7 +268,7 @@ export const TypeDetailPage: React.FC = () => {
               <select
                 value={filterBy}
                 onChange={(e) => handleFilterChange(e.target.value as FilterOption)}
-                className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
                 aria-label="Filter Pokémon by generation"
               >
                 <option value="all">All Generations</option>
@@ -288,7 +288,7 @@ export const TypeDetailPage: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => handleSortChange(e.target.value as SortOption)}
-              className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+              className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
               aria-label="Sort Pokémon"
             >
               <option value="pokedex">Sort by Pokédex # (Low to High)</option>
@@ -300,12 +300,12 @@ export const TypeDetailPage: React.FC = () => {
           </div>
 
           {/* View Mode */}
-          <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+          <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1 border border-border-light dark:border-gray-600">
             <button
               onClick={() => setViewMode('grid')}
               className={`p-2 rounded-md transition-colors ${
                 viewMode === 'grid'
-                  ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                  ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
                   : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
               aria-label="Grid view"
@@ -317,7 +317,7 @@ export const TypeDetailPage: React.FC = () => {
               onClick={() => setViewMode('list')}
               className={`p-2 rounded-md transition-colors ${
                 viewMode === 'list'
-                  ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                  ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
                   : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
               aria-label="List view"
@@ -330,7 +330,7 @@ export const TypeDetailPage: React.FC = () => {
       </div>
 
       {/* Pokemon of this type */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
             {formatPokemonName(name!)} Type Pokémon
@@ -353,7 +353,7 @@ export const TypeDetailPage: React.FC = () => {
                 showPageInfo
                 totalItems={processedPokemon.length}
                 itemsPerPage={itemsPerPage}
-                className="pt-8 mt-8 border-t border-gray-200 dark:border-gray-700"
+                className="pt-8 mt-8 border-t border-border-light dark:border-gray-700"
               />
             )}
           </>
@@ -370,7 +370,7 @@ export const TypeDetailPage: React.FC = () => {
             </p>
             <button
               onClick={() => setFilterBy('all')}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
             >
               Show all {formatPokemonName(name!)} type Pokémon
             </button>

@@ -80,7 +80,7 @@ export const AbilityDetailPage: React.FC = () => {
         </p>
         <Link
           to="/abilities"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Abilities
@@ -115,7 +115,7 @@ export const AbilityDetailPage: React.FC = () => {
     return (
       <Link
         to={`/pokemon/${pokemonId}`}
-        className="group block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:scale-105 transition-all duration-300 overflow-hidden"
+        className="group block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300 overflow-hidden"
         aria-label={`View details for ${formatPokemonName(pokemonEntry.pokemon.pokemon.name)}`}
       >
         <div className="p-6">
@@ -185,7 +185,7 @@ export const AbilityDetailPage: React.FC = () => {
     return (
       <Link
         to={`/pokemon/${pokemonId}`}
-        className="group block bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200"
+        className="group block bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-border-light dark:border-gray-700 hover:shadow-md hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-200"
         aria-label={`View details for ${formatPokemonName(pokemonEntry.pokemon.pokemon.name)}`}
       >
         <div className="p-4">
@@ -260,7 +260,7 @@ export const AbilityDetailPage: React.FC = () => {
       {/* Navigation */}
       <Link
         to="/abilities"
-        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-border-light dark:border-gray-700"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Abilities
@@ -300,7 +300,7 @@ export const AbilityDetailPage: React.FC = () => {
       </div>
 
       {/* Ability Description */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Ability Description
         </h2>
@@ -331,7 +331,7 @@ export const AbilityDetailPage: React.FC = () => {
       </div>
 
       {/* Controls */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 p-6">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="flex flex-wrap items-center gap-4">
             {/* Filter */}
@@ -340,7 +340,7 @@ export const AbilityDetailPage: React.FC = () => {
               <select
                 value={filterBy}
                 onChange={(e) => setFilterBy(e.target.value as FilterOption)}
-                className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
                 aria-label="Filter Pokemon by ability type"
               >
                 <option value="all">All Pokémon ({pokemon.length})</option>
@@ -353,7 +353,7 @@ export const AbilityDetailPage: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+              className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
               aria-label="Sort Pokemon"
             >
               <option value="pokedex">Sort by Pokédex #</option>
@@ -363,11 +363,11 @@ export const AbilityDetailPage: React.FC = () => {
           </div>
 
           {/* View Mode */}
-          <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+          <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1 border border-border-light dark:border-gray-600">
             <button
               onClick={() => setViewMode('grid')}
               className={`p-2 rounded-md transition-colors ${viewMode === 'grid'
-                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
               aria-label="Grid view"
@@ -377,7 +377,7 @@ export const AbilityDetailPage: React.FC = () => {
             <button
               onClick={() => setViewMode('list')}
               className={`p-2 rounded-md transition-colors ${viewMode === 'list'
-                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
               aria-label="List view"
@@ -389,7 +389,7 @@ export const AbilityDetailPage: React.FC = () => {
       </div>
 
       {/* Pokemon List */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Pokémon with {formatPokemonName(name!)}
         </h2>

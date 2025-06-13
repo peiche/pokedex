@@ -52,7 +52,7 @@ export const TypesPage: React.FC = () => {
           <Link
             key={type.name}
             to={`/type/${type.name}`}
-            className="group block p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:scale-105 transition-all duration-300"
+            className="group block p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300"
             aria-label={`View all ${type.name} type Pokémon`}
           >
             <div className="text-center">
@@ -68,7 +68,7 @@ export const TypesPage: React.FC = () => {
       </div>
 
       {/* Type Information */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           About Pokémon Types
         </h2>

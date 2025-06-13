@@ -36,6 +36,13 @@ export default {
           800: '#1f2937',
           900: '#111827',
         },
+        // Enhanced border colors for light mode
+        border: {
+          light: '#c1c7d0',      // ~20% darker than gray-300 (#d1d5db)
+          'light-hover': '#a8b0bc', // ~15% darker than border-light for hover states
+          'light-focus': '#9ca6b5', // ~20% darker than border-light-hover for focus states
+          'light-strong': '#8b95a8', // Strong borders for emphasis
+        }
       },
       spacing: {
         '18': '4.5rem',

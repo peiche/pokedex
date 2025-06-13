@@ -69,7 +69,7 @@ export const Accordion: React.FC<AccordionProps> = ({
         return (
           <div
             key={item.id}
-            className="bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 overflow-hidden transition-all duration-200"
+            className="bg-gray-50 dark:bg-gray-700 rounded-lg border border-border-light dark:border-gray-600 overflow-hidden transition-all duration-200"
           >
             {/* Accordion Header */}
             <button

@@ -115,7 +115,7 @@ export const PokemonDetailPage: React.FC = () => {
         </p>
         <Link
           to="/"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Pokédex
@@ -169,7 +169,7 @@ export const PokemonDetailPage: React.FC = () => {
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-border-light dark:border-gray-700"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -179,7 +179,7 @@ export const PokemonDetailPage: React.FC = () => {
           {prevId && (
             <Link
               to={`/pokemon/${prevId}`}
-              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
               aria-label={`Previous Pokémon (#${prevId})`}
             >
               <ChevronLeft className="w-4 h-4" />
@@ -189,7 +189,7 @@ export const PokemonDetailPage: React.FC = () => {
           {nextId && (
             <Link
               to={`/pokemon/${nextId}`}
-              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
               aria-label={`Next Pokémon (#${nextId})`}
             >
               #{nextId.toString().padStart(3, '0')}
@@ -200,7 +200,7 @@ export const PokemonDetailPage: React.FC = () => {
       </div>
 
       {/* Hero Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 overflow-hidden">
         <div className="flex flex-col lg:flex-row">
           {/* Image Section */}
           <div className="lg:w-1/2 p-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600">
@@ -256,7 +256,7 @@ export const PokemonDetailPage: React.FC = () => {
 
               {/* Physical Stats */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-border-light dark:border-gray-600">
                   <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
                     <Ruler className="w-4 h-4" />
                     <span className="text-sm font-medium">Height</span>
@@ -265,7 +265,7 @@ export const PokemonDetailPage: React.FC = () => {
                     {formatHeight(pokemon.height)}
                   </span>
                 </div>
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-border-light dark:border-gray-600">
                   <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
                     <Weight className="w-4 h-4" />
                     <span className="text-sm font-medium">Weight</span>
@@ -293,7 +293,7 @@ export const PokemonDetailPage: React.FC = () => {
       </div>
 
       {/* Stats Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Base Stats
         </h2>
@@ -306,7 +306,7 @@ export const PokemonDetailPage: React.FC = () => {
             />
           ))}
         </div>
-        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="mt-6 pt-6 border-t border-border-light dark:border-gray-700">
           <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
             <span>Total: {pokemon.stats.reduce((sum, stat) => sum + stat.base_stat, 0)}</span>
             <span>Generation {getPokemonGeneration(pokemon.id)}</span>
@@ -315,7 +315,7 @@ export const PokemonDetailPage: React.FC = () => {
       </div>
 
       {/* Abilities Section with Accordion */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Abilities
         </h2>
@@ -331,7 +331,7 @@ export const PokemonDetailPage: React.FC = () => {
 
       {/* Evolution Chain */}
       {species && (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             Evolution Chain
           </h2>
