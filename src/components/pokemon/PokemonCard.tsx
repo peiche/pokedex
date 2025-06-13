@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TypeBadge } from '../common/TypeBadge';
+import { FavoriteButton } from '../common/FavoriteButton';
 import { usePokemon } from '../../hooks/usePokemon';
 import { formatPokemonName, extractIdFromUrl } from '../../utils/pokemon';
 
@@ -23,12 +24,22 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
   const { data: pokemonData, isLoading: typesLoading } = usePokemon(pokemonId);
 
   return (
-    <Link 
-      to={`/pokemon/${pokemonId}`}
-      className="group block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300 overflow-hidden"
-      aria-label={`View details for ${formatPokemonName(pokemon.name)}`}
-    >
-      <div className="p-6">
+    <div className="group relative bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300 overflow-hidden">
+      {/* Favorite Button - Positioned absolutely in top-right corner */}
+      <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <FavoriteButton 
+          pokemon={pokemon} 
+          size="sm" 
+          variant="overlay"
+          showTooltip={false}
+        />
+      </div>
+
+      <Link 
+        to={`/pokemon/${pokemonId}`}
+        className="block p-6"
+        aria-label={`View details for ${formatPokemonName(pokemon.name)}`}
+      >
         {/* Pokemon Image */}
         <div className="relative w-32 h-32 mx-auto mb-4">
           {!imageLoaded && !imageError && (
@@ -98,7 +109,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
             )}
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };

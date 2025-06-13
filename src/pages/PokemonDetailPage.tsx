@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowLeft, Ruler, Weight, Zap, ExternalLink } from 'lucide-react';
 import { usePokemon, usePokemonSpecies, useAbility } from '../hooks/usePokemon';
 import { TypeBadge } from '../components/common/TypeBadge';
+import { FavoriteButton } from '../components/common/FavoriteButton';
 import { StatBar } from '../components/pokemon/StatBar';
 import { EvolutionChain } from '../components/pokemon/EvolutionChain';
 import { Accordion } from '../components/common/Accordion';
@@ -11,7 +12,8 @@ import {
   formatPokemonName, 
   formatHeight, 
   formatWeight,
-  getPokemonGeneration 
+  getPokemonGeneration,
+  extractIdFromUrl
 } from '../utils/pokemon';
 
 const AbilityContent: React.FC<{ abilityName: string }> = ({ abilityName }) => {
@@ -136,6 +138,12 @@ export const PokemonDetailPage: React.FC = () => {
     (entry) => entry.language.name === 'en'
   )?.genus;
 
+  // Create pokemon object for FavoriteButton
+  const pokemonForFavorite = {
+    name: pokemon.name,
+    url: `https://pokeapi.co/api/v2/pokemon/${pokemon.id}/`
+  };
+
   // Prepare accordion items for abilities
   const abilityAccordionItems = pokemon.abilities.map((ability) => ({
     id: ability.ability.name,
@@ -203,7 +211,16 @@ export const PokemonDetailPage: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 overflow-hidden">
         <div className="flex flex-col lg:flex-row">
           {/* Image Section */}
-          <div className="lg:w-1/2 p-8 bg-gradient-to-br from-background-blue-subtle to-background-purple-subtle dark:from-gray-700 dark:to-gray-600">
+          <div className="lg:w-1/2 p-8 bg-gradient-to-br from-background-blue-subtle to-background-purple-subtle dark:from-gray-700 dark:to-gray-600 relative">
+            {/* Favorite Button - Positioned in top-right of image section */}
+            <div className="absolute top-4 right-4 z-10">
+              <FavoriteButton 
+                pokemon={pokemonForFavorite} 
+                size="lg" 
+                variant="overlay"
+              />
+            </div>
+            
             <div className="aspect-square max-w-sm mx-auto">
               {imageUrl ? (
                 <img

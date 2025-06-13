@@ -8,6 +8,7 @@ import { TypesPage } from './pages/TypesPage';
 import { TypeDetailPage } from './pages/TypeDetailPage';
 import { AbilitiesPage } from './pages/AbilitiesPage';
 import { AbilityDetailPage } from './pages/AbilityDetailPage';
+import { FavoritesPage } from './pages/FavoritesPage';
 import { AboutPage } from './pages/AboutPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
@@ -47,6 +48,7 @@ function App() {
                 <Route path="type/:name/page/:pageNumber" element={<TypeDetailPage />} />
                 <Route path="abilities" element={<AbilitiesPage />} />
                 <Route path="ability/:name" element={<AbilityDetailPage />} />
+                <Route path="favorites" element={<FavoritesPage />} />
                 <Route path="about" element={<AboutPage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>

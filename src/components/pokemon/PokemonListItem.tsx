@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TypeBadge } from '../common/TypeBadge';
+import { FavoriteButton } from '../common/FavoriteButton';
 import { usePokemon } from '../../hooks/usePokemon';
 import { formatPokemonName, extractIdFromUrl } from '../../utils/pokemon';
 
@@ -23,12 +24,12 @@ export const PokemonListItem: React.FC<PokemonListItemProps> = ({ pokemon }) => 
   const { data: pokemonData, isLoading: typesLoading } = usePokemon(pokemonId);
 
   return (
-    <Link 
-      to={`/pokemon/${pokemonId}`}
-      className="group block bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-border-light dark:border-gray-700 hover:shadow-md hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-200"
-      aria-label={`View details for ${formatPokemonName(pokemon.name)}`}
-    >
-      <div className="p-4">
+    <div className="group bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-border-light dark:border-gray-700 hover:shadow-md hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-200">
+      <Link 
+        to={`/pokemon/${pokemonId}`}
+        className="block p-4"
+        aria-label={`View details for ${formatPokemonName(pokemon.name)}`}
+      >
         <div className="flex items-center gap-4">
           {/* Pokemon Image */}
           <div className="relative flex-shrink-0 w-16 h-16">
@@ -110,8 +111,18 @@ export const PokemonListItem: React.FC<PokemonListItemProps> = ({ pokemon }) => 
               </div>
             </div>
           )}
+
+          {/* Favorite Button */}
+          <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <FavoriteButton 
+              pokemon={pokemon} 
+              size="sm" 
+              variant="minimal"
+              showTooltip={false}
+            />
+          </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
