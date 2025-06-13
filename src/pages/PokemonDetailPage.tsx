@@ -157,7 +157,7 @@ export const PokemonDetailPage: React.FC = () => {
         Hidden
       </span>
     ) : (
-      <span className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
+      <span className="px-2 py-1 text-xs bg-background-neutral-muted dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
         Slot {ability.slot}
       </span>
     )
@@ -169,7 +169,7 @@ export const PokemonDetailPage: React.FC = () => {
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-border-light dark:border-gray-700"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-background-light-secondary dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-background-neutral-muted dark:hover:bg-gray-700 transition-colors border border-border-light dark:border-gray-700"
         >
           <ArrowLeft className="w-4 h-4" />
           Back
@@ -203,7 +203,7 @@ export const PokemonDetailPage: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 overflow-hidden">
         <div className="flex flex-col lg:flex-row">
           {/* Image Section */}
-          <div className="lg:w-1/2 p-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600">
+          <div className="lg:w-1/2 p-8 bg-gradient-to-br from-background-blue-subtle to-background-purple-subtle dark:from-gray-700 dark:to-gray-600">
             <div className="aspect-square max-w-sm mx-auto">
               {imageUrl ? (
                 <img
@@ -212,7 +212,7 @@ export const PokemonDetailPage: React.FC = () => {
                   className="w-full h-full object-contain drop-shadow-2xl"
                 />
               ) : (
-                <div className="w-full h-full bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                <div className="w-full h-full bg-background-neutral-muted dark:bg-gray-700 rounded-lg flex items-center justify-center">
                   <span className="text-gray-400">No image available</span>
                 </div>
               )}
@@ -256,7 +256,7 @@ export const PokemonDetailPage: React.FC = () => {
 
               {/* Physical Stats */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-border-light dark:border-gray-600">
+                <div className="bg-background-light-secondary dark:bg-gray-700 rounded-lg p-4 border border-border-light dark:border-gray-600">
                   <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
                     <Ruler className="w-4 h-4" />
                     <span className="text-sm font-medium">Height</span>
@@ -265,7 +265,7 @@ export const PokemonDetailPage: React.FC = () => {
                     {formatHeight(pokemon.height)}
                   </span>
                 </div>
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-border-light dark:border-gray-600">
+                <div className="bg-background-light-secondary dark:bg-gray-700 rounded-lg p-4 border border-border-light dark:border-gray-600">
                   <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
                     <Weight className="w-4 h-4" />
                     <span className="text-sm font-medium">Weight</span>

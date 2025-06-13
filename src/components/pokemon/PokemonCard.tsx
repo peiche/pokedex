@@ -32,7 +32,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
         {/* Pokemon Image */}
         <div className="relative w-32 h-32 mx-auto mb-4">
           {!imageLoaded && !imageError && (
-            <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            <div className="absolute inset-0 bg-background-neutral-muted dark:bg-gray-700 rounded-lg animate-pulse"></div>
           )}
           
           {!imageError ? (
@@ -80,8 +80,8 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
             {typesLoading ? (
               // Loading skeleton for types
               <>
-                <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
-                <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+                <div className="w-16 h-6 bg-background-neutral-muted dark:bg-gray-700 rounded-full animate-pulse"></div>
+                <div className="w-16 h-6 bg-background-neutral-muted dark:bg-gray-700 rounded-full animate-pulse"></div>
               </>
             ) : pokemonData?.types ? (
               // Actual types
@@ -94,7 +94,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
               ))
             ) : (
               // Fallback if no types available
-              <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+              <div className="w-16 h-6 bg-background-neutral-muted dark:bg-gray-700 rounded-full"></div>
             )}
           </div>
         </div>

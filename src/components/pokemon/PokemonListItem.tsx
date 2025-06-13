@@ -33,7 +33,7 @@ export const PokemonListItem: React.FC<PokemonListItemProps> = ({ pokemon }) => 
           {/* Pokemon Image */}
           <div className="relative flex-shrink-0 w-16 h-16">
             {!imageLoaded && !imageError && (
-              <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+              <div className="absolute inset-0 bg-background-neutral-muted dark:bg-gray-700 rounded-lg animate-pulse"></div>
             )}
             
             {!imageError ? (
@@ -82,8 +82,8 @@ export const PokemonListItem: React.FC<PokemonListItemProps> = ({ pokemon }) => 
               {typesLoading ? (
                 // Loading skeleton for types
                 <>
-                  <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
-                  <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+                  <div className="w-16 h-6 bg-background-neutral-muted dark:bg-gray-700 rounded-full animate-pulse"></div>
+                  <div className="w-16 h-6 bg-background-neutral-muted dark:bg-gray-700 rounded-full animate-pulse"></div>
                 </>
               ) : pokemonData?.types ? (
                 // Actual types
@@ -96,7 +96,7 @@ export const PokemonListItem: React.FC<PokemonListItemProps> = ({ pokemon }) => 
                 ))
               ) : (
                 // Fallback if no types available
-                <div className="w-16 h-6 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                <div className="w-16 h-6 bg-background-neutral-muted dark:bg-gray-700 rounded-full"></div>
               )}
             </div>
           </div>

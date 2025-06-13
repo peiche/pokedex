@@ -69,11 +69,11 @@ export const Accordion: React.FC<AccordionProps> = ({
         return (
           <div
             key={item.id}
-            className="bg-gray-50 dark:bg-gray-700 rounded-lg border border-border-light dark:border-gray-600 overflow-hidden transition-all duration-200"
+            className="bg-background-light-secondary dark:bg-gray-700 rounded-lg border border-border-light dark:border-gray-600 overflow-hidden transition-all duration-200"
           >
             {/* Accordion Header */}
             <button
-              className="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
+              className="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-background-neutral-muted dark:hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
               onClick={() => toggleItem(item.id)}
               onKeyDown={(e) => handleKeyDown(e, item.id)}
               aria-expanded={isExpanded}
