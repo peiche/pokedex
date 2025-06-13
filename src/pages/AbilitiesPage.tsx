@@ -1,69 +1,62 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Zap, Users, Filter, Grid, List } from 'lucide-react';
-import { useAllAbilities, useSearchAbilities } from '../hooks/usePokemon';
+import { Search, Zap, Users } from 'lucide-react';
+import { useAllAbilities } from '../hooks/usePokemon';
+import { useFilterSort, sortItems, filterBySearch } from '../hooks/useFilterSort';
+import { FilterSortControls } from '../components/common/FilterSortControls';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { Pagination } from '../components/common/Pagination';
 import { formatPokemonName } from '../utils/pokemon';
 import { PokeAPI } from 'pokeapi-types';
 
 type ViewMode = 'grid' | 'list';
-type SortOption = 'name' | 'name-desc';
 
 export const AbilitiesPage: React.FC = () => {
-  const [searchInput, setSearchInput] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
-  const [sortBy, setSortBy] = useState<SortOption>('name');
+  // Get all abilities for filtering and sorting
+  const { data: allAbilitiesData, isLoading: isLoadingAll } = useAllAbilities(1, 1000);
 
-  const { data: allAbilitiesData, isLoading: isLoadingAll } = useAllAbilities(1, 1000); // Get all for sorting
-  const { data: searchResults, isLoading: isSearching } = useSearchAbilities(searchQuery);
+  // Filter and sort state management
+  const filterSort = useFilterSort({
+    enableSearch: true,
+    enableGenerationFilter: false,
+    enableTypeFilter: false,
+    enableCategoryFilter: false,
+    enableStatusFilter: false,
+    availableSorts: ['name-asc', 'name-desc'],
+    defaultSort: 'name-asc',
+    defaultItemsPerPage: 25
+  });
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSearchQuery(searchInput.trim());
-    setCurrentPage(1);
-  };
+  // View mode state (separate from filter/sort)
+  const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
 
-  const handleClearSearch = () => {
-    setSearchInput('');
-    setSearchQuery('');
-    setCurrentPage(1);
-  };
-
-  // Process and sort abilities
+  // Process and filter abilities
   const processedAbilities = useMemo(() => {
-    const abilities = searchQuery.length > 0 ? searchResults?.slice() : allAbilitiesData?.results?.slice();
-    
-    if (!abilities) return [];
+    if (!allAbilitiesData?.results) return [];
 
-    // Sort abilities based on selected option
-    return abilities.sort((a, b) => {
-      switch (sortBy) {
-        case 'name':
-          return a.name.localeCompare(b.name);
-        case 'name-desc':
-          return b.name.localeCompare(a.name);
-        default:
-          return 0;
-      }
-    });
-  }, [allAbilitiesData, searchResults, searchQuery, sortBy]);
+    let filtered = allAbilitiesData.results.slice();
 
-  // Pagination
-  const itemsPerPage = 24;
-  const totalPages = Math.ceil(processedAbilities.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedAbilities = processedAbilities.slice(startIndex, startIndex + itemsPerPage);
+    // Apply search filter
+    filtered = filterBySearch(filtered, filterSort.searchQuery);
 
-  const isLoading = isLoadingAll || (searchQuery.length > 0 && isSearching);
+    // Apply sorting
+    filtered = sortItems(filtered, filterSort.sortBy);
 
-  // Reset page when sort changes
-  const handleSortChange = (newSort: SortOption) => {
-    setSortBy(newSort);
-    setCurrentPage(1);
+    return filtered;
+  }, [allAbilitiesData, filterSort.searchQuery, filterSort.sortBy]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(processedAbilities.length / filterSort.itemsPerPage);
+  const startIndex = (filterSort.currentPage - 1) * filterSort.itemsPerPage;
+  const paginatedAbilities = processedAbilities.slice(startIndex, startIndex + filterSort.itemsPerPage);
+
+  const handlePageChange = (newPage: number) => {
+    filterSort.setCurrentPage(newPage);
+    // Smooth scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const isLoading = isLoadingAll;
 
   if (isLoading && !processedAbilities.length) {
     return (
@@ -141,90 +134,35 @@ export const AbilitiesPage: React.FC = () => {
         </p>
         {processedAbilities.length > 0 && (
           <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            {searchQuery ? `Found ${processedAbilities.length} abilities matching "${searchQuery}"` : `${processedAbilities.length} abilities available`}
+            {filterSort.searchQuery ? `Found ${processedAbilities.length} abilities matching "${filterSort.searchQuery}"` : `${processedAbilities.length} abilities available`}
           </p>
         )}
       </div>
 
-      {/* Search and Filters */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 p-6">
-        <div className="flex flex-col gap-4">
-          {/* Search Form */}
-          <form onSubmit={handleSearchSubmit} className="flex gap-2">
-            <div className="relative flex-1 max-w-100">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search abilities..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
-                aria-label="Search for abilities"
-              />
-            </div>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors border border-blue-700"
-              aria-label="Search abilities"
-            >
-              Search
-            </button>
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={handleClearSearch}
-                className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors border border-gray-600"
-                aria-label="Clear search"
-              >
-                Clear
-              </button>
-            )}
-          </form>
-
-          {/* Controls */}
-          <div className="flex gap-4 items-start sm:items-center justify-between">
-            {/* Sort */}
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-500" />
-              <select
-                value={sortBy}
-                onChange={(e) => handleSortChange(e.target.value as SortOption)}
-                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
-                aria-label="Sort abilities"
-              >
-                <option value="name">Sort A-Z</option>
-                <option value="name-desc">Sort Z-A</option>
-              </select>
-            </div>
-
-            {/* View Mode */}
-            <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1 border border-border-light dark:border-gray-600">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-md transition-colors ${
-                  viewMode === 'grid'
-                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                }`}
-                aria-label="Grid view"
-              >
-                <Grid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-2 rounded-md transition-colors ${
-                  viewMode === 'list'
-                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                }`}
-                aria-label="List view"
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Filter and Sort Controls */}
+      <FilterSortControls
+        searchQuery={filterSort.searchQuery}
+        sortBy={filterSort.sortBy}
+        generationFilter={filterSort.generationFilter}
+        typeFilter={filterSort.typeFilter}
+        categoryFilter={filterSort.categoryFilter}
+        statusFilter={filterSort.statusFilter}
+        itemsPerPage={filterSort.itemsPerPage}
+        viewMode={viewMode}
+        onSearchChange={filterSort.setSearchQuery}
+        onSortChange={filterSort.setSortBy}
+        onGenerationFilterChange={filterSort.setGenerationFilter}
+        onItemsPerPageChange={filterSort.setItemsPerPage}
+        onViewModeChange={setViewMode}
+        onResetFilters={filterSort.resetFilters}
+        enableSearch={true}
+        enableGenerationFilter={false}
+        enableViewModeToggle={true}
+        availableSorts={['name-asc', 'name-desc']}
+        totalItems={allAbilitiesData?.results?.length}
+        filteredItems={processedAbilities.length}
+        isLoading={isLoading}
+      />
 
       {/* Abilities Grid/List */}
       {paginatedAbilities.length > 0 ? (
@@ -246,18 +184,18 @@ export const AbilitiesPage: React.FC = () => {
           {/* Pagination */}
           {totalPages > 1 && (
             <Pagination
-              currentPage={currentPage}
+              currentPage={filterSort.currentPage}
               totalPages={totalPages}
               baseUrl="/abilities"
               showPageInfo
               totalItems={processedAbilities.length}
-              itemsPerPage={itemsPerPage}
-              onPageChange={setCurrentPage}
+              itemsPerPage={filterSort.itemsPerPage}
+              onPageChange={handlePageChange}
               className="pt-8"
             />
           )}
         </>
-      ) : searchQuery ? (
+      ) : filterSort.searchQuery ? (
         <div className="text-center py-12">
           <div className="w-16 h-16 mx-auto mb-4 text-gray-400">
             <Search className="w-full h-full" />
@@ -266,10 +204,10 @@ export const AbilitiesPage: React.FC = () => {
             No abilities found
           </h3>
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            No abilities match your search for "{searchQuery}".
+            No abilities match your search for "{filterSort.searchQuery}".
           </p>
           <button
-            onClick={handleClearSearch}
+            onClick={filterSort.resetFilters}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
           >
             Clear search and browse all abilities
