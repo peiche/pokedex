@@ -21,7 +21,8 @@ export const typeColors: Record<string, string> = {
 };
 
 // Extract Pokemon ID from URL
-export const extractIdFromUrl = (url: string): number => {
+export const extractIdFromUrl = (urlOrObject: string | { url: string }): number => {
+  const url = typeof urlOrObject === 'string' ? urlOrObject : urlOrObject.url;
   const matches = url.match(/\/(\d+)\/$/);
   return matches ? parseInt(matches[1], 10) : 0;
 };
