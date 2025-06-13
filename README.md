@@ -11,7 +11,7 @@ A modern, responsive, and feature-rich Pokédex built with React, React Query, a
 * **🖼️ Official Artwork:** Experience the Pokédex with high-quality official Pokémon artwork.
 * **🔗 Bookmarkable URLs:** Seamless routing allows for easy bookmarking of individual Pokémon, types, and abilities.
 * **📊 Detailed Information:** Access a wealth of information for each Pokémon, including stats, abilities, types, and more.
-* **✨ Luide Icons:** Beautiful and consistent iconography provided by Luide Icons.
+* **✨ Lucide Icons:** Beautiful and consistent iconography provided by Lucide Icons.
 
 ## Technologies Used
 
@@ -20,7 +20,7 @@ A modern, responsive, and feature-rich Pokédex built with React, React Query, a
 * **Tailwind CSS:** A utility-first CSS framework for rapidly building custom designs.
 * **PokeAPI:** A free and open-source RESTful API for Pokémon data.
 * **React Router:** Declarative routing for React.
-* **Luide Icons:** A collection of open-source SVG icons.
+* **Lucide Icons:** A collection of open-source SVG icons.
 
 ## Getting Started
 
