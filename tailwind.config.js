@@ -31,10 +31,10 @@ export default {
           300: '#dadce0',  // Enhanced contrast for borders
           400: '#9aa0a6',  // Medium gray for secondary text
           500: '#5f6368',  // Darker gray for primary text
-          600: '#3c4043',  // Very dark gray
-          700: '#202124',  // Near black
-          800: '#1a1a1a',  // Dark mode backgrounds
-          900: '#0f0f0f',  // Darkest
+          600: '#4B5563',  // Very dark gray
+          700: '#374151',  // Near black
+          800: '#1F2937',  // Dark mode backgrounds
+          900: '#111827',  // Darkest
         },
         // Enhanced border colors for light mode with better contrast
         border: {
