@@ -13,7 +13,7 @@ import {
 import { PokeAPI } from 'pokeapi-types';
 
 type ViewMode = 'grid' | 'list';
-type SortOption = 'pokedex' | 'name' | 'type';
+type SortOption = 'pokedex' | 'pokedex-desc' | 'name' | 'name-desc';
 type FilterOption = 'all' | 'primary' | 'hidden';
 type ItemsPerPageOption = 10 | 20 | 50;
 
@@ -71,17 +71,16 @@ export const AbilityDetailPage: React.FC = () => {
           const idB = extractIdFromUrl(b.pokemon.pokemon.url);
           return idA - idB;
         }
+        case 'pokedex-desc': {
+          const idA = extractIdFromUrl(a.pokemon.pokemon.url);
+          const idB = extractIdFromUrl(b.pokemon.pokemon.url);
+          return idB - idA;
+        }
         case 'name': {
           return a.pokemon.pokemon.name.localeCompare(b.pokemon.pokemon.name);
         }
-        case 'type': {
-          // Sort by primary type, then by name
-          const typeA = a.pokemonData?.types?.[0]?.type?.name || 'zzz';
-          const typeB = b.pokemonData?.types?.[0]?.type?.name || 'zzz';
-          if (typeA !== typeB) {
-            return typeA.localeCompare(typeB);
-          }
-          return a.pokemon.pokemon.name.localeCompare(b.pokemon.pokemon.name);
+        case 'name-desc': {
+          return b.pokemon.pokemon.name.localeCompare(a.pokemon.pokemon.name);
         }
         default:
           return 0;
@@ -420,9 +419,10 @@ export const AbilityDetailPage: React.FC = () => {
                 className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
                 aria-label="Sort Pokemon"
               >
-                <option value="pokedex">Sort by Pokédex #</option>
-                <option value="name">Sort by Name</option>
-                <option value="type">Sort by Type</option>
+                <option value="pokedex">Pokédex Number (Ascending)</option>
+                <option value="pokedex-desc">Pokédex Number (Descending)</option>
+                <option value="name">Name (A to Z)</option>
+                <option value="name-desc">Name (Z to A)</option>
               </select>
             </div>
 
