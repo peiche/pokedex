@@ -4,6 +4,7 @@ import { ArrowLeft, Zap, Eye, EyeOff, Filter, Grid, List } from 'lucide-react';
 import { usePokemonWithAbility } from '../hooks/usePokemon';
 import { TypeBadge } from '../components/common/TypeBadge';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
+import { AbilityPokemonSkeleton } from '../components/common/PokemonSkeleton';
 import {
   formatPokemonName,
   extractIdFromUrl,
@@ -101,6 +102,9 @@ export const AbilityDetailPage: React.FC = () => {
 
   const primaryCount = pokemon.filter(p => !p.pokemon.is_hidden).length;
   const hiddenCount = pokemon.filter(p => p.pokemon.is_hidden).length;
+
+  // Check if Pokemon data is still loading
+  const isPokemonDataLoading = pokemon.some(p => !p.pokemonData);
 
   const PokemonCard: React.FC<{
     pokemonEntry: {
@@ -394,20 +398,25 @@ export const AbilityDetailPage: React.FC = () => {
           Pokémon with {formatPokemonName(name!)}
         </h2>
 
-        {processedPokemon.length > 0 ? (
-          viewMode === 'grid' ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {processedPokemon.map((pokemonEntry) => (
-                <PokemonCard key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {processedPokemon.map((pokemonEntry) => (
-                <PokemonListItem key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
-              ))}
-            </div>
-          )
+        {/* Show skeleton while Pokemon data is loading */}
+        {isPokemonDataLoading ? (
+          <AbilityPokemonSkeleton viewMode={viewMode} />
+        ) : processedPokemon.length > 0 ? (
+          <div className="animate-fade-in">
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                {processedPokemon.map((pokemonEntry) => (
+                  <PokemonCard key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {processedPokemon.map((pokemonEntry) => (
+                  <PokemonListItem key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
+                ))}
+              </div>
+            )}
+          </div>
         ) : (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             No Pokémon found with the selected filters.
