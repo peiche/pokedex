@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { pokemonApi } from '../services/pokemonApi';
+import { pokemonApi, SearchResult } from '../services/pokemonApi';
 
 export const usePokemonList = (page: number = 1, limit: number = 20) => {
   const offset = (page - 1) * limit;
@@ -114,6 +114,17 @@ export const useSearchPokemon = (query: string) => {
   return useQuery({
     queryKey: ['search-pokemon', query],
     queryFn: () => pokemonApi.searchPokemon(query),
+    staleTime: 10 * 60 * 1000, // 10 minutes for search results
+    gcTime: 10 * 60 * 1000,
+    enabled: query.length > 0,
+  });
+};
+
+// New hook for combined search
+export const useCombinedSearch = (query: string) => {
+  return useQuery({
+    queryKey: ['combined-search', query],
+    queryFn: () => pokemonApi.searchAll(query),
     staleTime: 10 * 60 * 1000, // 10 minutes for search results
     gcTime: 10 * 60 * 1000,
     enabled: query.length > 0,

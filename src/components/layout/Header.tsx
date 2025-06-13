@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Menu, X, Sun, Moon, Zap } from 'lucide-react';
-import { useSearchPokemon } from '../../hooks/usePokemon';
+import { useCombinedSearch } from '../../hooks/usePokemon';
 import { debounce, formatPokemonName, extractIdFromUrl } from '../../utils/pokemon';
 import { useTheme } from '../../contexts/ThemeContext';
 
@@ -13,7 +13,7 @@ export const Header: React.FC = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
-  const { data: searchResults, isLoading: isSearchLoading } = useSearchPokemon(searchQuery);
+  const { data: searchResults, isLoading: isSearchLoading } = useCombinedSearch(searchQuery);
 
   const debouncedSearch = debounce((query: string) => {
     setSearchQuery(query);
@@ -25,8 +25,13 @@ export const Header: React.FC = () => {
     setShowSearchResults(value.length > 0);
   };
 
-  const handleSearchSelect = (pokemonName: string) => {
-    navigate(`/pokemon/${pokemonName}`);
+  const handleSearchSelect = (result: { name: string; type: 'pokemon' | 'ability'; url: string }) => {
+    if (result.type === 'pokemon') {
+      const pokemonId = extractIdFromUrl(result.url);
+      navigate(`/pokemon/${pokemonId}`);
+    } else {
+      navigate(`/ability/${result.name}`);
+    }
     setSearchQuery('');
     setShowSearchResults(false);
   };
@@ -91,11 +96,11 @@ export const Header: React.FC = () => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
-                  placeholder="Search Pokémon..."
+                  placeholder="Search Pokémon & abilities..."
                   className="w-64 pl-10 pr-4 py-2 bg-background-light-secondary dark:bg-gray-800 border border-border-light dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
                   onChange={handleSearchChange}
                   onFocus={(e) => e.target.value.length > 0 && setShowSearchResults(true)}
-                  aria-label="Search for Pokémon"
+                  aria-label="Search for Pokémon and abilities"
                 />
               </div>
 
@@ -106,25 +111,38 @@ export const Header: React.FC = () => {
                     <div className="p-4 text-center text-gray-500">Searching...</div>
                   ) : searchResults && searchResults.length > 0 ? (
                     <ul role="listbox" aria-label="Search results">
-                      {searchResults.map((pokemon) => (
-                        <li key={pokemon.name}>
+                      {searchResults.map((result, index) => (
+                        <li key={`${result.type}-${result.name}-${index}`}>
                           <button
                             className="w-full text-left px-4 py-2 hover:bg-background-neutral-muted dark:hover:bg-gray-700 transition-colors focus:outline-none focus:bg-background-neutral-muted dark:focus:bg-gray-700"
-                            onClick={() => handleSearchSelect(pokemon.name)}
+                            onClick={() => handleSearchSelect(result)}
                             role="option"
                           >
-                            <span className="text-gray-900 dark:text-white">
-                              {formatPokemonName(pokemon.name)}
-                            </span>
-                            <span className="text-sm text-gray-500 ml-2">
-                              #{extractIdFromUrl(pokemon.url).toString().padStart(3, '0')}
-                            </span>
+                            <div className="flex items-center justify-between">
+                              <span className="text-gray-900 dark:text-white">
+                                {formatPokemonName(result.name)}
+                              </span>
+                              <div className="flex items-center gap-2">
+                                {result.type === 'pokemon' && (
+                                  <span className="text-sm text-gray-500">
+                                    #{extractIdFromUrl(result.url).toString().padStart(3, '0')}
+                                  </span>
+                                )}
+                                <span className={`px-2 py-1 text-xs rounded-full ${
+                                  result.type === 'pokemon' 
+                                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
+                                    : 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
+                                }`}>
+                                  {result.type === 'pokemon' ? 'Pokémon' : 'Ability'}
+                                </span>
+                              </div>
+                            </div>
                           </button>
                         </li>
                       ))}
                     </ul>
                   ) : searchQuery.length > 0 ? (
-                    <div className="p-4 text-center text-gray-500">No Pokémon found</div>
+                    <div className="p-4 text-center text-gray-500">No results found</div>
                   ) : null}
                 </div>
               )}
@@ -184,7 +202,7 @@ export const Header: React.FC = () => {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <input
                     type="text"
-                    placeholder="Search Pokémon..."
+                    placeholder="Search Pokémon & abilities..."
                     className="w-full pl-10 pr-4 py-2 bg-background-light-secondary dark:bg-gray-800 border border-border-light dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
                     onChange={handleSearchChange}
                   />

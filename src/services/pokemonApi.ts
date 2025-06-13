@@ -2,6 +2,13 @@ import { PokeAPI } from "pokeapi-types";
 
 const BASE_URL = 'https://pokeapi.co/api/v2';
 
+// Combined search result type
+export interface SearchResult {
+  name: string;
+  url: string;
+  type: 'pokemon' | 'ability';
+}
+
 export const pokemonApi = {
   // Get list of Pokemon with pagination
   getPokemonList: async (offset = 0, limit = 20): Promise<PokeAPI.NamedAPIResourceList> => {
@@ -180,5 +187,41 @@ export const pokemonApi = {
     return data.results.filter((pokemon) => 
       pokemon.name.toLowerCase().includes(query.toLowerCase())
     ).slice(0, 10); // Limit to 10 results for autocomplete
+  },
+
+  // Combined search for both Pokemon and abilities
+  searchAll: async (query: string): Promise<SearchResult[]> => {
+    if (!query.trim()) return [];
+
+    try {
+      // Search both Pokemon and abilities concurrently
+      const [pokemonResults, abilityResults] = await Promise.all([
+        pokemonApi.searchPokemon(query),
+        pokemonApi.searchAbilities(query)
+      ]);
+
+      // Convert Pokemon results to SearchResult format
+      const pokemonSearchResults: SearchResult[] = pokemonResults.map(pokemon => ({
+        name: pokemon.name,
+        url: pokemon.url,
+        type: 'pokemon' as const
+      }));
+
+      // Convert ability results to SearchResult format
+      const abilitySearchResults: SearchResult[] = abilityResults.slice(0, 5).map(ability => ({
+        name: ability.name,
+        url: ability.url,
+        type: 'ability' as const
+      }));
+
+      // Combine results with Pokemon first, then abilities
+      const combinedResults = [...pokemonSearchResults, ...abilitySearchResults];
+
+      // Limit total results to 15 for performance
+      return combinedResults.slice(0, 15);
+    } catch (error) {
+      console.error('Error in combined search:', error);
+      return [];
+    }
   }
 };
