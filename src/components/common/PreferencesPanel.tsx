@@ -9,7 +9,6 @@ import {
   Moon, 
   Grid, 
   List,
-  Zap,
   Palette,
   HardDrive,
   X,
@@ -30,7 +29,7 @@ interface PreferencesPanelProps {
 }
 
 export const PreferencesPanel: React.FC<PreferencesPanelProps> = ({ isOpen, onClose }) => {
-  const { preferences, updatePreference, resetPreferences } = useUIPreferences();
+  const { preferences, updatePreference } = useUIPreferences();
   const { exportPreferences, importPreferences, resetAllPreferences, getStorageUsage } = usePreferencesManager();
   const [importStatus, setImportStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [showResetConfirm, setShowResetConfirm] = useState(false);

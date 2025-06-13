@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Menu, X, Sun, Moon, Zap, Settings, Heart } from 'lucide-react';
 import { useCombinedSearch } from '../../hooks/usePokemon';
-import { useFavorites } from '../../hooks/useFavorites';
 import { debounce, formatPokemonName, extractIdFromUrl } from '../../utils/pokemon';
 import { useTheme } from '../../contexts/ThemeContext';
 import { PreferencesPanel } from '../common/PreferencesPanel';
@@ -15,7 +14,6 @@ export const Header: React.FC = () => {
   const searchRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const { favoritesCount } = useFavorites();
 
   const { data: searchResults, isLoading: isSearchLoading } = useCombinedSearch(searchQuery);
 
@@ -93,11 +91,6 @@ export const Header: React.FC = () => {
                 >
                   <Heart className="w-4 h-4" />
                   <span>Favorites</span>
-                  {favoritesCount > 0 && (
-                    <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                      {favoritesCount > 99 ? '99+' : favoritesCount}
-                    </span>
-                  )}
                 </Link>
                 <Link
                   to="/about"
@@ -223,11 +216,6 @@ export const Header: React.FC = () => {
                 >
                   <Heart className="w-4 h-4" />
                   <span>Favorites</span>
-                  {favoritesCount > 0 && (
-                    <span className="w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-medium">
-                      {favoritesCount > 99 ? '99+' : favoritesCount}
-                    </span>
-                  )}
                 </Link>
                 <Link
                   to="/about"

@@ -1,12 +1,12 @@
 import React from 'react';
-import { Search, Filter, RotateCcw, Grid, List } from 'lucide-react';
-import { 
-  SortOption, 
-  FilterOption, 
-  TypeFilter, 
-  CategoryFilter, 
-  StatusFilter, 
-  ItemsPerPageOption 
+import { Search, RotateCcw, Grid, List } from 'lucide-react';
+import {
+  SortOption,
+  FilterOption,
+  TypeFilter,
+  CategoryFilter,
+  StatusFilter,
+  ItemsPerPageOption
 } from '../../hooks/useFilterSort';
 
 interface FilterSortControlsProps {
@@ -19,7 +19,7 @@ interface FilterSortControlsProps {
   statusFilter: StatusFilter;
   itemsPerPage: ItemsPerPageOption;
   viewMode?: 'grid' | 'list';
-  
+
   // Update functions
   onSearchChange: (query: string) => void;
   onSortChange: (sort: SortOption) => void;
@@ -30,7 +30,7 @@ interface FilterSortControlsProps {
   onItemsPerPageChange: (items: ItemsPerPageOption) => void;
   onViewModeChange?: (mode: 'grid' | 'list') => void;
   onResetFilters: () => void;
-  
+
   // Configuration
   enableSearch?: boolean;
   enableGenerationFilter?: boolean;
@@ -40,7 +40,7 @@ interface FilterSortControlsProps {
   enableViewModeToggle?: boolean;
   availableSorts?: SortOption[];
   availableTypes?: string[];
-  
+
   // Additional props
   totalItems?: number;
   filteredItems?: number;
@@ -58,7 +58,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
   statusFilter,
   itemsPerPage,
   viewMode = 'grid',
-  
+
   // Update functions
   onSearchChange,
   onSortChange,
@@ -69,7 +69,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
   onItemsPerPageChange,
   onViewModeChange,
   onResetFilters,
-  
+
   // Configuration
   enableSearch = true,
   enableGenerationFilter = true,
@@ -79,7 +79,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
   enableViewModeToggle = true,
   availableSorts = ['name-asc', 'name-desc', 'pokedex-asc', 'pokedex-desc'],
   availableTypes = [],
-  
+
   // Additional props
   totalItems,
   filteredItems,
@@ -90,8 +90,8 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
     switch (sort) {
       case 'name-asc': return 'Name (A-Z)';
       case 'name-desc': return 'Name (Z-A)';
-      case 'pokedex-asc': return 'Pokédex Number (Low to High)';
-      case 'pokedex-desc': return 'Pokédex Number (High to Low)';
+      case 'pokedex-asc': return 'Pokédex Number (Ascending)';
+      case 'pokedex-desc': return 'Pokédex Number (Descending)';
       case 'date-added': return 'Date Added';
       case 'popularity': return 'Popularity';
       case 'type': return 'Type';
@@ -100,19 +100,19 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
     }
   };
 
-  const hasActiveFilters = searchQuery !== '' || 
-                          generationFilter !== 'all' || 
-                          typeFilter !== 'all' || 
-                          categoryFilter !== 'all' || 
-                          statusFilter !== 'all';
+  const hasActiveFilters = searchQuery !== '' ||
+    generationFilter !== 'all' ||
+    typeFilter !== 'all' ||
+    categoryFilter !== 'all' ||
+    statusFilter !== 'all';
 
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 p-6 ${className}`}>
       <div className="space-y-6">
         {/* Search Bar */}
         {enableSearch && (
-          <div className="flex gap-2">
-            <div className="relative flex-1 max-w-md">
+          <div className="flex gap-2 relative">
+            <div className="relative flex-1 max-w-100">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
@@ -123,12 +123,12 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
                 disabled={isLoading}
               />
             </div>
-            
+
             {hasActiveFilters && (
               <button
                 onClick={onResetFilters}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
-                disabled={isLoading}
+                className="absolute right-1.5 top-0 bottom-0 my-1.5 flex items-center gap-2 px-2 py-0.5 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
+                disabled={isLoading || !hasActiveFilters}
                 title="Clear all filters"
               >
                 <RotateCcw className="w-4 h-4" />
@@ -139,13 +139,13 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
         )}
 
         {/* Filters and Controls Row */}
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           {/* Filters */}
           <div className="flex flex-wrap items-center gap-4">
             {/* Generation Filter */}
             {enableGenerationFilter && (
               <div className="flex items-center gap-2">
-                <Filter className="w-4 h-4 text-gray-500" />
+                {/* <Filter className="w-4 h-4 text-gray-500" /> */}
                 <select
                   value={generationFilter}
                   onChange={(e) => onGenerationFilterChange(e.target.value as FilterOption)}
@@ -228,6 +228,59 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
 
           {/* View Mode and Items Per Page */}
           <div className="flex items-center gap-4">
+            {/* View Mode Toggle */}
+            {enableViewModeToggle && onViewModeChange && (
+              <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1 border border-border-light dark:border-gray-600">
+                <button
+                  onClick={() => onViewModeChange('grid')}
+                  className={`p-2 rounded-md transition-colors ${viewMode === 'grid'
+                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                    }`}
+                  disabled={isLoading}
+                  aria-label="Grid view"
+                >
+                  <Grid className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onViewModeChange('list')}
+                  className={`p-2 rounded-md transition-colors ${viewMode === 'list'
+                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                    }`}
+                  disabled={isLoading}
+                  aria-label="List view"
+                >
+                  <List className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Results Summary */}
+        {(totalItems !== undefined || filteredItems !== undefined) && (
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between pt-4 border-t border-border-light dark:border-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              {filteredItems !== undefined && totalItems !== undefined ? (
+                hasActiveFilters ? (
+                  <>Showing {filteredItems} of {totalItems} results</>
+                ) : (
+                  <>{totalItems} total results</>
+                )
+              ) : filteredItems !== undefined ? (
+                <>{filteredItems} results</>
+              ) : totalItems !== undefined ? (
+                <>{totalItems} total results</>
+              ) : null}
+
+              {hasActiveFilters && (
+                <span className="inline-block text-sm text-blue-600 dark:text-blue-400 ml-2">
+                  Filters active
+                </span>
+              )}
+            </div>
+
             {/* Items Per Page */}
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600 dark:text-gray-400">Show:</span>
@@ -243,61 +296,6 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
                 <option value={100}>100 per page</option>
               </select>
             </div>
-
-            {/* View Mode Toggle */}
-            {enableViewModeToggle && onViewModeChange && (
-              <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1 border border-border-light dark:border-gray-600">
-                <button
-                  onClick={() => onViewModeChange('grid')}
-                  className={`p-2 rounded-md transition-colors ${
-                    viewMode === 'grid'
-                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                  }`}
-                  disabled={isLoading}
-                  aria-label="Grid view"
-                >
-                  <Grid className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => onViewModeChange('list')}
-                  className={`p-2 rounded-md transition-colors ${
-                    viewMode === 'list'
-                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                  }`}
-                  disabled={isLoading}
-                  aria-label="List view"
-                >
-                  <List className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Results Summary */}
-        {(totalItems !== undefined || filteredItems !== undefined) && (
-          <div className="flex items-center justify-between pt-4 border-t border-border-light dark:border-gray-600">
-            <div className="text-sm text-gray-600 dark:text-gray-400">
-              {filteredItems !== undefined && totalItems !== undefined ? (
-                hasActiveFilters ? (
-                  <>Showing {filteredItems} of {totalItems} results</>
-                ) : (
-                  <>{totalItems} total results</>
-                )
-              ) : filteredItems !== undefined ? (
-                <>{filteredItems} results</>
-              ) : totalItems !== undefined ? (
-                <>{totalItems} total results</>
-              ) : null}
-            </div>
-            
-            {hasActiveFilters && (
-              <div className="text-sm text-blue-600 dark:text-blue-400">
-                Filters active
-              </div>
-            )}
           </div>
         )}
       </div>

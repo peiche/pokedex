@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
-import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Zap, Eye, EyeOff, Filter, Grid, List, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useMemo } from 'react';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
+import { ArrowLeft, Zap, Eye, EyeOff, Filter, Grid, List, Search } from 'lucide-react';
 import { usePokemonWithAbility } from '../hooks/usePokemon';
 import { TypeBadge } from '../components/common/TypeBadge';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
@@ -11,6 +11,7 @@ import {
   extractIdFromUrl,
 } from '../utils/pokemon';
 import { PokeAPI } from 'pokeapi-types';
+import { FavoriteButton } from '../components/common/FavoriteButton';
 
 type ViewMode = 'grid' | 'list';
 type SortOption = 'pokedex' | 'pokedex-desc' | 'name' | 'name-desc';
@@ -20,10 +21,9 @@ type ItemsPerPageOption = 10 | 20 | 50;
 export const AbilityDetailPage: React.FC = () => {
   const { name } = useParams<{ name: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   // Get URL parameters
-  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const currentPage = parseInt(searchParams.get('page') || '1', 25);
   const itemsPerPage = parseInt(searchParams.get('limit') || '20', 10) as ItemsPerPageOption;
   const sortBy = (searchParams.get('sort') || 'pokedex') as SortOption;
   const filterBy = (searchParams.get('filter') || 'all') as FilterOption;
@@ -34,13 +34,13 @@ export const AbilityDetailPage: React.FC = () => {
   // Update URL parameters
   const updateUrlParams = (updates: Record<string, string | number>) => {
     const newParams = new URLSearchParams(searchParams);
-    
+
     Object.entries(updates).forEach(([key, value]) => {
-      if (value === '' || (key === 'page' && value === 1) || 
-          (key === 'limit' && value === 20) || 
-          (key === 'sort' && value === 'pokedex') ||
-          (key === 'filter' && value === 'all') ||
-          (key === 'view' && value === 'grid')) {
+      if (value === '' || (key === 'page' && value === 1) ||
+        (key === 'limit' && value === 20) ||
+        (key === 'sort' && value === 'pokedex') ||
+        (key === 'filter' && value === 'all') ||
+        (key === 'view' && value === 'grid')) {
         newParams.delete(key);
       } else {
         newParams.set(key, value.toString());
@@ -113,7 +113,7 @@ export const AbilityDetailPage: React.FC = () => {
   const handlePageChange = (newPage: number) => {
     updateUrlParams({ page: newPage });
     // Smooth scroll to top of Pokemon section
-    document.getElementById('pokemon-section')?.scrollIntoView({ 
+    document.getElementById('pokemon-section')?.scrollIntoView({
       behavior: 'smooth',
       block: 'start'
     });
@@ -174,62 +174,74 @@ export const AbilityDetailPage: React.FC = () => {
     const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
 
     return (
-      <Link
-        to={`/pokemon/${pokemonId}`}
-        className="group block bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300 overflow-hidden"
-        aria-label={`View details for ${formatPokemonName(pokemonEntry.pokemon.pokemon.name)}`}
-      >
-        <div className="p-6">
-          {/* Pokemon Image */}
-          <div className="relative w-24 h-24 mx-auto mb-4">
-            <img
-              src={imageUrl}
-              alt={formatPokemonName(pokemonEntry.pokemon.pokemon.name)}
-              className="w-full h-full object-contain"
-              loading="lazy"
+      <>
+        {/* Favorite Button - Positioned absolutely in top-right corner */}
+        <div className="group relative bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300 overflow-hidden">
+          <div className="absolute top-3 right-3 z-10 _opacity-0 _group-hover:opacity-100 transition-opacity duration-200">
+            <FavoriteButton
+              pokemon={pokemonEntry.pokemon.pokemon}
+              size="sm"
+              variant="overlay"
+              showTooltip={false}
             />
-            {pokemonEntry.pokemon.is_hidden && (
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
-                <EyeOff className="w-3 h-3 text-white" />
-              </div>
-            )}
           </div>
-
-          {/* Pokemon Info */}
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-              {formatPokemonName(pokemonEntry.pokemon.pokemon.name)}
-            </h3>
-
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-              #{pokemonId.toString().padStart(3, '0')}
-            </p>
-
-            {/* Types */}
-            {pokemonData?.types && (
-              <div className="flex justify-center gap-1 mb-2">
-                {pokemonData.types.map((type) => (
-                  <TypeBadge
-                    key={type.type.name}
-                    type={type.type.name}
-                    size="sm"
-                  />
-                ))}
+          <Link
+            to={`/pokemon/${pokemonId}`}
+            aria-label={`View details for ${formatPokemonName(pokemonEntry.pokemon.pokemon.name)}`}
+          >
+            <div className="p-6">
+              {/* Pokemon Image */}
+              <div className="relative w-24 h-24 mx-auto mb-4">
+                <img
+                  src={imageUrl}
+                  alt={formatPokemonName(pokemonEntry.pokemon.pokemon.name)}
+                  className="w-full h-full object-contain"
+                  loading="lazy"
+                />
+                {pokemonEntry.pokemon.is_hidden && (
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center">
+                    <EyeOff className="w-3 h-3 text-white" />
+                  </div>
+                )}
               </div>
-            )}
 
-            {/* Ability Type Badge */}
-            <div className="flex justify-center">
-              <span className={`px-2 py-1 text-xs rounded-full ${pokemonEntry.pokemon.is_hidden
-                ? 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
-                : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
-                }`}>
-                {pokemonEntry.pokemon.is_hidden ? 'Hidden Ability' : 'Primary Ability'}
-              </span>
+              {/* Pokemon Info */}
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {formatPokemonName(pokemonEntry.pokemon.pokemon.name)}
+                </h3>
+
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                  #{pokemonId.toString().padStart(3, '0')}
+                </p>
+
+                {/* Types */}
+                {pokemonData?.types && (
+                  <div className="flex justify-center gap-1 mb-2">
+                    {pokemonData.types.map((type) => (
+                      <TypeBadge
+                        key={type.type.name}
+                        type={type.type.name}
+                        size="sm"
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Ability Type Badge */}
+                <div className="flex justify-center">
+                  <span className={`px-2 py-1 text-xs rounded-full ${pokemonEntry.pokemon.is_hidden
+                    ? 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200'
+                    : 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
+                    }`}>
+                    {pokemonEntry.pokemon.is_hidden ? 'Hidden Ability' : 'Primary Ability'}
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
+          </Link >
         </div>
-      </Link>
+      </>
     );
   };
 
@@ -315,6 +327,20 @@ export const AbilityDetailPage: React.FC = () => {
       </Link>
     );
   };
+
+  // const [viewMode, setViewMode] = useViewPreference(`type-${name}`);
+
+  // // Filter and sort state management
+  // const filterSort = useFilterSort({
+  //   enableSearch: true,
+  //   enableGenerationFilter: true,
+  //   enableTypeFilter: false,
+  //   enableCategoryFilter: false,
+  //   enableStatusFilter: false,
+  //   availableSorts: ['pokedex-asc', 'pokedex-desc', 'name-asc', 'name-desc'],
+  //   defaultSort: 'pokedex-asc',
+  //   defaultItemsPerPage: 25
+  // });
 
   return (
     <div className="space-y-8">
@@ -453,6 +479,13 @@ export const AbilityDetailPage: React.FC = () => {
 
           {/* Bottom row - Items per page and pagination info */}
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between pt-4 border-t border-border-light dark:border-gray-600">
+            {/* Pagination info */}
+            {processedPokemon.length > 0 && (
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                {processedPokemon.length} total results
+              </div>
+            )}
+
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-600 dark:text-gray-400">Show:</span>
               <select
@@ -462,124 +495,81 @@ export const AbilityDetailPage: React.FC = () => {
                 aria-label="Items per page"
               >
                 <option value={10}>10 per page</option>
-                <option value={20}>20 per page</option>
+                <option value={25}>25 per page</option>
                 <option value={50}>50 per page</option>
+                <option value={100}>100 per page</option>
               </select>
             </div>
-
-            {/* Pagination info */}
-            {processedPokemon.length > 0 && (
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, processedPokemon.length)} of {processedPokemon.length} Pokémon
-              </div>
-            )}
           </div>
         </div>
       </div>
 
       {/* Pokemon List */}
-      <div id="pokemon-section" className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            Pokémon with {formatPokemonName(name!)}
-          </h2>
-          
-          {/* Quick pagination controls */}
-          {totalPages > 1 && (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage <= 1}
-                className={`p-2 rounded-lg transition-colors ${
-                  currentPage <= 1
-                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-                aria-label="Previous page"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              
-              <span className="text-sm text-gray-600 dark:text-gray-400 px-2">
-                {currentPage} / {totalPages}
-              </span>
-              
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage >= totalPages}
-                className={`p-2 rounded-lg transition-colors ${
-                  currentPage >= totalPages
-                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-                aria-label="Next page"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          )}
-        </div>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+          Pokémon with {formatPokemonName(name!)}
+        </h2>
+      </div>
 
-        {/* Show skeleton while Pokemon data is loading */}
-        {isPokemonDataLoading ? (
-          <AbilityPokemonSkeleton viewMode={viewMode} />
-        ) : paginatedPokemon.length > 0 ? (
-          <div className="space-y-6">
-            <div className="animate-fade-in">
-              {viewMode === 'grid' ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                  {paginatedPokemon.map((pokemonEntry) => (
-                    <PokemonCard key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {paginatedPokemon.map((pokemonEntry) => (
-                    <PokemonListItem key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Full Pagination */}
-            {totalPages > 1 && (
-              <div className="pt-6 border-t border-border-light dark:border-gray-600">
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  baseUrl={`/ability/${name}`}
-                  showPageInfo
-                  totalItems={processedPokemon.length}
-                  itemsPerPage={itemsPerPage}
-                  onPageChange={handlePageChange}
-                />
+      {/* Show skeleton while Pokemon data is loading */}
+      {isPokemonDataLoading ? (
+        <AbilityPokemonSkeleton viewMode={viewMode} />
+      ) : paginatedPokemon.length > 0 ? (
+        <div className="space-y-6">
+          <div className="animate-fade-in">
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                {paginatedPokemon.map((pokemonEntry) => (
+                  <PokemonCard key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {paginatedPokemon.map((pokemonEntry) => (
+                  <PokemonListItem key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
+                ))}
               </div>
             )}
           </div>
-        ) : filterBy !== 'all' ? (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 text-gray-400">
-              <Search className="w-full h-full" />
+
+          {/* Full Pagination */}
+          {totalPages > 1 && (
+            <div className="pt-6 border-t border-border-light dark:border-gray-600">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                baseUrl={`/ability/${name}`}
+                showPageInfo
+                totalItems={processedPokemon.length}
+                itemsPerPage={itemsPerPage}
+                onPageChange={handlePageChange}
+              />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              No Pokémon found
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              No Pokémon found with the selected filters.
-            </p>
-            <button
-              onClick={() => handleFilterChange('all')}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
-            >
-              Show all Pokémon with this ability
-            </button>
+          )}
+        </div>
+      ) : filterBy !== 'all' ? (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 mx-auto mb-4 text-gray-400">
+            <Search className="w-full h-full" />
           </div>
-        ) : (
-          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-            No Pokémon found with this ability.
-          </div>
-        )}
-      </div>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+            No Pokémon found
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            No Pokémon found with the selected filters.
+          </p>
+          <button
+            onClick={() => handleFilterChange('all')}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
+          >
+            Show all Pokémon with this ability
+          </button>
+        </div>
+      ) : (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          No Pokémon found with this ability.
+        </div>
+      )}
     </div>
   );
 };

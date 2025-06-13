@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useAllTypes } from '../hooks/usePokemon';
 import { TypeBadge } from '../components/common/TypeBadge';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
-import { formatPokemonName } from '../utils/pokemon';
 
 export const TypesPage: React.FC = () => {
   const { data: typesData, isLoading, error } = useAllTypes();
@@ -30,7 +29,7 @@ export const TypesPage: React.FC = () => {
   }
 
   // Filter out unknown and shadow types
-  const mainTypes = typesData.results.filter((type) => 
+  const mainTypes = typesData.results.filter((type) =>
     !['unknown', 'shadow'].includes(type.name)
   );
 
@@ -56,12 +55,7 @@ export const TypesPage: React.FC = () => {
             aria-label={`View all ${type.name} type Pokémon`}
           >
             <div className="text-center">
-              <div className="mb-4">
-                <TypeBadge type={type.name} size="lg" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                {formatPokemonName(type.name)}
-              </h3>
+              <TypeBadge type={type.name} size="lg" />
             </div>
           </Link>
         ))}
@@ -74,12 +68,12 @@ export const TypesPage: React.FC = () => {
         </h2>
         <div className="prose dark:prose-invert max-w-none">
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-            Each Pokémon has one or two types that determine their strengths and weaknesses in battle. 
-            Understanding type matchups is crucial for strategic gameplay. Some types are super effective 
+            Each Pokémon has one or two types that determine their strengths and weaknesses in battle.
+            Understanding type matchups is crucial for strategic gameplay. Some types are super effective
             against others, while some are not very effective or have no effect at all.
           </p>
           <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-4">
-            Click on any type above to see all Pokémon of that type and learn about their effectiveness 
+            Click on any type above to see all Pokémon of that type and learn about their effectiveness
             against other types.
           </p>
         </div>

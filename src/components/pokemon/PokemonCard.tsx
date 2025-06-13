@@ -26,7 +26,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
   return (
     <div className="group relative bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300 overflow-hidden">
       {/* Favorite Button - Positioned absolutely in top-right corner */}
-      <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <div className="absolute top-3 right-3 z-10 transition-opacity duration-200">
         <FavoriteButton 
           pokemon={pokemon} 
           size="sm" 

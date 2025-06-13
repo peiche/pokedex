@@ -9,8 +9,6 @@ import { PokemonGrid } from '../components/pokemon/PokemonGrid';
 import { Pagination } from '../components/common/Pagination';
 import { extractIdFromUrl } from '../utils/pokemon';
 
-type ViewMode = 'grid' | 'list';
-
 export const FavoritesPage: React.FC = () => {
   const { favorites, favoritesCount, clearAllFavorites } = useFavorites();
   const [viewMode, setViewMode] = useViewPreference('favorites');

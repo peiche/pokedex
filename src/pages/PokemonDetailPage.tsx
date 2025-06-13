@@ -13,7 +13,6 @@ import {
   formatHeight, 
   formatWeight,
   getPokemonGeneration,
-  extractIdFromUrl
 } from '../utils/pokemon';
 
 const AbilityContent: React.FC<{ abilityName: string }> = ({ abilityName }) => {

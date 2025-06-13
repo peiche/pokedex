@@ -77,25 +77,6 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-          Pokédex
-        </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
-          Discover and learn about Pokémon
-        </p>
-        {processedPokemon.length > 0 && (
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
-            {filterSort.generationFilter === 'all' 
-              ? `${processedPokemon.length} Pokémon available`
-              : `${processedPokemon.length} Pokémon in Generation ${filterSort.generationFilter.replace('gen', '')}`
-            }
-          </p>
-        )}
-      </div>
-
-      {/* Filter and Sort Controls */}
       <FilterSortControls
         searchQuery={filterSort.searchQuery}
         sortBy={filterSort.sortBy}
@@ -114,7 +95,7 @@ export const HomePage: React.FC = () => {
         enableSearch={true}
         enableGenerationFilter={true}
         enableViewModeToggle={true}
-        availableSorts={['name-asc', 'name-desc', 'pokedex-asc', 'pokedex-desc', 'popularity']}
+        availableSorts={['pokedex-asc', 'pokedex-desc', 'name-asc', 'name-desc']}
         totalItems={data?.results?.length}
         filteredItems={processedPokemon.length}
         isLoading={isLoading}

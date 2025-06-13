@@ -113,7 +113,7 @@ export const PokemonListItem: React.FC<PokemonListItemProps> = ({ pokemon }) => 
           )}
 
           {/* Favorite Button */}
-          <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          <div className="flex-shrink-0 group-hover:opacity-100 transition-opacity duration-200">
             <FavoriteButton 
               pokemon={pokemon} 
               size="sm" 

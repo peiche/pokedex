@@ -72,7 +72,6 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     overlay: `
       bg-white/90 dark:bg-gray-800/90 
       backdrop-blur-sm 
-      border border-white/20 dark:border-gray-600/20 
       hover:bg-white dark:hover:bg-gray-800
       shadow-lg
     `,
@@ -105,7 +104,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
           transition-all duration-200
           ${favorited 
             ? 'text-red-500 fill-red-500 drop-shadow-sm' 
-            : 'text-gray-400 dark:text-gray-500 group-hover:text-red-400 dark:group-hover:text-red-400'
+            : 'text-gray-400 dark:text-gray-500 group-hover:text-red-400 dark:group-hover:text-red-400 opacity-0 group-hover:opacity-100'
           }
           ${isAnimating ? 'scale-125' : ''}
         `}

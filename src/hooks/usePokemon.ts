@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { pokemonApi, SearchResult } from '../services/pokemonApi';
+import { pokemonApi } from '../services/pokemonApi';
 
 export const usePokemonList = (page: number = 1, limit: number = 20) => {
   const offset = (page - 1) * limit;
