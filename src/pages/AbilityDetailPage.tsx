@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Zap, Eye, EyeOff, Filter, Grid, List } from 'lucide-react';
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Zap, Eye, EyeOff, Filter, Grid, List, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import { usePokemonWithAbility } from '../hooks/usePokemon';
 import { TypeBadge } from '../components/common/TypeBadge';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { AbilityPokemonSkeleton } from '../components/common/PokemonSkeleton';
+import { Pagination } from '../components/common/Pagination';
 import {
   formatPokemonName,
   extractIdFromUrl,
@@ -14,14 +15,40 @@ import { PokeAPI } from 'pokeapi-types';
 type ViewMode = 'grid' | 'list';
 type SortOption = 'pokedex' | 'name' | 'type';
 type FilterOption = 'all' | 'primary' | 'hidden';
+type ItemsPerPageOption = 10 | 20 | 50;
 
 export const AbilityDetailPage: React.FC = () => {
   const { name } = useParams<{ name: string }>();
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
-  const [sortBy, setSortBy] = useState<SortOption>('pokedex');
-  const [filterBy, setFilterBy] = useState<FilterOption>('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  // Get URL parameters
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const itemsPerPage = parseInt(searchParams.get('limit') || '20', 10) as ItemsPerPageOption;
+  const sortBy = (searchParams.get('sort') || 'pokedex') as SortOption;
+  const filterBy = (searchParams.get('filter') || 'all') as FilterOption;
+  const viewMode = (searchParams.get('view') || 'grid') as ViewMode;
 
   const { data, isLoading, error } = usePokemonWithAbility(name!);
+
+  // Update URL parameters
+  const updateUrlParams = (updates: Record<string, string | number>) => {
+    const newParams = new URLSearchParams(searchParams);
+    
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === '' || (key === 'page' && value === 1) || 
+          (key === 'limit' && value === 20) || 
+          (key === 'sort' && value === 'pokedex') ||
+          (key === 'filter' && value === 'all') ||
+          (key === 'view' && value === 'grid')) {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, value.toString());
+      }
+    });
+
+    setSearchParams(newParams);
+  };
 
   // Process and sort Pokemon
   const processedPokemon = useMemo(() => {
@@ -61,6 +88,37 @@ export const AbilityDetailPage: React.FC = () => {
       }
     });
   }, [data, sortBy, filterBy]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(processedPokemon.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedPokemon = processedPokemon.slice(startIndex, startIndex + itemsPerPage);
+
+  // Handle control changes
+  const handleSortChange = (newSort: SortOption) => {
+    updateUrlParams({ sort: newSort, page: 1 });
+  };
+
+  const handleFilterChange = (newFilter: FilterOption) => {
+    updateUrlParams({ filter: newFilter, page: 1 });
+  };
+
+  const handleViewModeChange = (newViewMode: ViewMode) => {
+    updateUrlParams({ view: newViewMode });
+  };
+
+  const handleItemsPerPageChange = (newLimit: ItemsPerPageOption) => {
+    updateUrlParams({ limit: newLimit, page: 1 });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    updateUrlParams({ page: newPage });
+    // Smooth scroll to top of Pokemon section
+    document.getElementById('pokemon-section')?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
 
   if (isLoading) {
     return (
@@ -336,90 +394,189 @@ export const AbilityDetailPage: React.FC = () => {
 
       {/* Controls */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 p-6">
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-          <div className="flex flex-wrap items-center gap-4">
-            {/* Filter */}
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-500" />
+        <div className="flex flex-col gap-4">
+          {/* Top row - Filters and View Mode */}
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <div className="flex flex-wrap items-center gap-4">
+              {/* Filter */}
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4 text-gray-500" />
+                <select
+                  value={filterBy}
+                  onChange={(e) => handleFilterChange(e.target.value as FilterOption)}
+                  className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
+                  aria-label="Filter Pokemon by ability type"
+                >
+                  <option value="all">All Pokémon ({pokemon.length})</option>
+                  <option value="primary">Primary Only ({primaryCount})</option>
+                  <option value="hidden">Hidden Only ({hiddenCount})</option>
+                </select>
+              </div>
+
+              {/* Sort */}
               <select
-                value={filterBy}
-                onChange={(e) => setFilterBy(e.target.value as FilterOption)}
+                value={sortBy}
+                onChange={(e) => handleSortChange(e.target.value as SortOption)}
                 className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
-                aria-label="Filter Pokemon by ability type"
+                aria-label="Sort Pokemon"
               >
-                <option value="all">All Pokémon ({pokemon.length})</option>
-                <option value="primary">Primary Only ({primaryCount})</option>
-                <option value="hidden">Hidden Only ({hiddenCount})</option>
+                <option value="pokedex">Sort by Pokédex #</option>
+                <option value="name">Sort by Name</option>
+                <option value="type">Sort by Type</option>
               </select>
             </div>
 
-            {/* Sort */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
-              aria-label="Sort Pokemon"
-            >
-              <option value="pokedex">Sort by Pokédex #</option>
-              <option value="name">Sort by Name</option>
-              <option value="type">Sort by Type</option>
-            </select>
+            {/* View Mode */}
+            <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1 border border-border-light dark:border-gray-600">
+              <button
+                onClick={() => handleViewModeChange('grid')}
+                className={`p-2 rounded-md transition-colors ${viewMode === 'grid'
+                  ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  }`}
+                aria-label="Grid view"
+              >
+                <Grid className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleViewModeChange('list')}
+                className={`p-2 rounded-md transition-colors ${viewMode === 'list'
+                  ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  }`}
+                aria-label="List view"
+              >
+                <List className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
-          {/* View Mode */}
-          <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1 border border-border-light dark:border-gray-600">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-md transition-colors ${viewMode === 'grid'
-                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                }`}
-              aria-label="Grid view"
-            >
-              <Grid className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-2 rounded-md transition-colors ${viewMode === 'list'
-                ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                }`}
-              aria-label="List view"
-            >
-              <List className="w-4 h-4" />
-            </button>
+          {/* Bottom row - Items per page and pagination info */}
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between pt-4 border-t border-border-light dark:border-gray-600">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Show:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => handleItemsPerPageChange(parseInt(e.target.value) as ItemsPerPageOption)}
+                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
+                aria-label="Items per page"
+              >
+                <option value={10}>10 per page</option>
+                <option value={20}>20 per page</option>
+                <option value={50}>50 per page</option>
+              </select>
+            </div>
+
+            {/* Pagination info */}
+            {processedPokemon.length > 0 && (
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, processedPokemon.length)} of {processedPokemon.length} Pokémon
+              </div>
+            )}
           </div>
         </div>
       </div>
 
       {/* Pokemon List */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-          Pokémon with {formatPokemonName(name!)}
-        </h2>
+      <div id="pokemon-section" className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Pokémon with {formatPokemonName(name!)}
+          </h2>
+          
+          {/* Quick pagination controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage <= 1}
+                className={`p-2 rounded-lg transition-colors ${
+                  currentPage <= 1
+                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
+                aria-label="Previous page"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              
+              <span className="text-sm text-gray-600 dark:text-gray-400 px-2">
+                {currentPage} / {totalPages}
+              </span>
+              
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage >= totalPages}
+                className={`p-2 rounded-lg transition-colors ${
+                  currentPage >= totalPages
+                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                }`}
+                aria-label="Next page"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Show skeleton while Pokemon data is loading */}
         {isPokemonDataLoading ? (
           <AbilityPokemonSkeleton viewMode={viewMode} />
-        ) : processedPokemon.length > 0 ? (
-          <div className="animate-fade-in">
-            {viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                {processedPokemon.map((pokemonEntry) => (
-                  <PokemonCard key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {processedPokemon.map((pokemonEntry) => (
-                  <PokemonListItem key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
-                ))}
+        ) : paginatedPokemon.length > 0 ? (
+          <div className="space-y-6">
+            <div className="animate-fade-in">
+              {viewMode === 'grid' ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                  {paginatedPokemon.map((pokemonEntry) => (
+                    <PokemonCard key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {paginatedPokemon.map((pokemonEntry) => (
+                    <PokemonListItem key={`${pokemonEntry.pokemon.pokemon.name}-${pokemonEntry.pokemon.is_hidden}`} pokemonEntry={pokemonEntry} />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Full Pagination */}
+            {totalPages > 1 && (
+              <div className="pt-6 border-t border-border-light dark:border-gray-600">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  baseUrl={`/ability/${name}`}
+                  showPageInfo
+                  totalItems={processedPokemon.length}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={handlePageChange}
+                />
               </div>
             )}
           </div>
+        ) : filterBy !== 'all' ? (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 mx-auto mb-4 text-gray-400">
+              <Search className="w-full h-full" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              No Pokémon found
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              No Pokémon found with the selected filters.
+            </p>
+            <button
+              onClick={() => handleFilterChange('all')}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
+            >
+              Show all Pokémon with this ability
+            </button>
+          </div>
         ) : (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-            No Pokémon found with the selected filters.
+            No Pokémon found with this ability.
           </div>
         )}
       </div>
