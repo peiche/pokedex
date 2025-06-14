@@ -13,7 +13,9 @@ import {
   BookOpen,
   Target,
   Layers,
-  TrendingUp
+  TrendingUp,
+  Heart,
+  Settings
 } from 'lucide-react';
 import { TypeBadge } from '../components/common/TypeBadge';
 
@@ -109,6 +111,148 @@ export const AboutPage: React.FC = () => {
             title="Evolution Chains"
             description="Visualize complete evolution paths and understand how Pokémon transform and grow."
           />
+          <FeatureCard
+            icon={<Heart className="w-6 h-6 text-red-600 dark:text-red-400" />}
+            title="Personal Favorites"
+            description="Save your favorite Pokémon for quick access and build your personal collection with persistent storage."
+          />
+          <FeatureCard
+            icon={<Settings className="w-6 h-6 text-gray-600 dark:text-gray-400" />}
+            title="Customizable Experience"
+            description="Personalize your browsing with adjustable view modes, sorting options, and results per page settings."
+          />
+        </div>
+      </div>
+
+      {/* Favorites System */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+          <Heart className="w-6 h-6 text-red-600 dark:text-red-400" />
+          Managing Your Favorite Pokémon
+        </h2>
+        
+        <div className="space-y-6">
+          <StepCard
+            step={1}
+            title="Adding Favorites"
+            description="Click the heart icon on any Pokémon card to instantly add it to your favorites. The heart will turn red to show it's been saved."
+            visual={
+              <div className="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-600 rounded-lg">
+                <div className="w-8 h-8 bg-white dark:bg-gray-700 rounded-full flex items-center justify-center border border-border-light dark:border-gray-500">
+                  <Heart className="w-4 h-4 text-gray-400" />
+                </div>
+                <span className="text-sm text-gray-600 dark:text-gray-400">→</span>
+                <div className="w-8 h-8 bg-white dark:bg-gray-700 rounded-full flex items-center justify-center border border-border-light dark:border-gray-500">
+                  <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+                </div>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Click to favorite</span>
+              </div>
+            }
+          />
+          
+          <StepCard
+            step={2}
+            title="Accessing Your Collection"
+            description="Visit your favorites page by clicking 'Favorites' in the main navigation. All your saved Pokémon are stored locally and persist between sessions."
+            visual={
+              <div className="p-3 bg-gray-100 dark:bg-gray-600 rounded-lg">
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                  <Heart className="w-4 h-4 text-red-500" />
+                  <span>Favorites</span>
+                  <span className="text-xs bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-2 py-1 rounded-full">
+                    12 saved
+                  </span>
+                </div>
+              </div>
+            }
+          />
+          
+          <StepCard
+            step={3}
+            title="Managing Your Favorites"
+            description="On the favorites page, you can search, filter, and sort your collection. Remove individual Pokémon by clicking their heart icon again, or clear all favorites at once."
+          />
+          
+          <StepCard
+            step={4}
+            title="Automatic Sync"
+            description="Your favorites are automatically saved to your browser's local storage. They'll be there when you return, even after closing your browser."
+          />
+        </div>
+
+        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+          <h4 className="text-sm font-medium text-blue-900 dark:text-blue-200 mb-2">
+            💡 Pro Tip
+          </h4>
+          <p className="text-sm text-blue-800 dark:text-blue-300">
+            Your favorites are sorted by most recently added by default, making it easy to find Pokémon you've just discovered. 
+            You can change the sorting to alphabetical or by Pokémon number in the favorites page controls.
+          </p>
+        </div>
+      </div>
+
+      {/* Search Results Customization */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+          <Settings className="w-6 h-6 text-gray-600 dark:text-gray-400" />
+          Customizing Your Search Results
+        </h2>
+        
+        <div className="space-y-6">
+          <StepCard
+            step={1}
+            title="Adjusting Results Per Page"
+            description="Control how many Pokémon appear on each page using the 'Show' dropdown. Choose from 10, 25, 50, or 100 results per page based on your preference."
+            visual={
+              <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-600 rounded-lg">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Show:</span>
+                <select className="bg-white dark:bg-gray-700 border border-border-light dark:border-gray-500 rounded-lg px-3 py-2 text-sm">
+                  <option>25 per page</option>
+                </select>
+              </div>
+            }
+          />
+          
+          <StepCard
+            step={2}
+            title="Switching View Modes"
+            description="Toggle between grid and list views using the view mode buttons. Grid view shows larger cards with images, while list view displays more compact information."
+            visual={
+              <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-600 rounded-lg">
+                <div className="flex items-center bg-white dark:bg-gray-700 rounded-lg p-1 border border-border-light dark:border-gray-500">
+                  <button className="p-2 bg-blue-600 text-white rounded-md">
+                    <Grid className="w-4 h-4" />
+                  </button>
+                  <button className="p-2 text-gray-500">
+                    <List className="w-4 h-4" />
+                  </button>
+                </div>
+                <span className="text-sm text-gray-600 dark:text-gray-400">Grid / List view</span>
+              </div>
+            }
+          />
+          
+          <StepCard
+            step={3}
+            title="Persistent Preferences"
+            description="Your view preferences are automatically saved for each page. The homepage, favorites, types, and abilities pages each remember your preferred settings."
+          />
+          
+          <StepCard
+            step={4}
+            title="Smart Filtering"
+            description="Use the generation filter to narrow results to specific regions, and combine with search to find exactly what you're looking for. All filters work together seamlessly."
+          />
+        </div>
+
+        <div className="mt-6 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+          <h4 className="text-sm font-medium text-green-900 dark:text-green-200 mb-2">
+            ⚡ Performance Note
+          </h4>
+          <p className="text-sm text-green-800 dark:text-green-300">
+            Higher results per page (50-100) may take slightly longer to load but reduce the need for pagination. 
+            Choose the setting that works best for your device and internet connection.
+          </p>
         </div>
       </div>
 
@@ -376,6 +520,10 @@ export const AboutPage: React.FC = () => {
                 <Target className="w-4 h-4 text-green-600 dark:text-green-400" />
                 Use filters to find Pokémon from your favorite generation
               </li>
+              <li className="flex items-center gap-2">
+                <Target className="w-4 h-4 text-green-600 dark:text-green-400" />
+                Heart icons save Pokémon to your personal favorites
+              </li>
             </ul>
           </div>
         </div>
@@ -401,6 +549,13 @@ export const AboutPage: React.FC = () => {
           >
             <Layers className="w-4 h-4" />
             Explore Types
+          </Link>
+          <Link
+            to="/favorites"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors font-medium border border-white/30"
+          >
+            <Heart className="w-4 h-4" />
+            View Favorites
           </Link>
         </div>
       </div>
