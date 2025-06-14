@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Search, 
-  Filter, 
   Grid, 
   List, 
   Zap, 
@@ -84,7 +83,7 @@ export const AboutPage: React.FC = () => {
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto">
           Your comprehensive guide to exploring the world of Pokémon. Learn how to use all the features 
-          of this modern Poke-Vista to discover, research, and understand Pokémon like never before.
+          of this modern Pokédex to discover, research, and understand Pokémon like never before.
         </p>
       </div>
 
@@ -145,7 +144,7 @@ export const AboutPage: React.FC = () => {
                   <Sun className="w-5 h-5 text-orange-500" />
                   <span className="text-sm text-gray-600 dark:text-gray-400">Light Mode</span>
                 </div>
-                <span className="text-sm text-gray-500">or</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">or</span>
                 <div className="flex items-center gap-2 p-2 bg-white dark:bg-gray-700 rounded-lg border border-border-light dark:border-gray-500">
                   <Moon className="w-5 h-5 text-blue-500" />
                   <span className="text-sm text-gray-600 dark:text-gray-400">Dark Mode</span>
@@ -274,7 +273,7 @@ export const AboutPage: React.FC = () => {
             visual={
               <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-600 rounded-lg">
                 <span className="text-sm text-gray-600 dark:text-gray-400">Show:</span>
-                <select className="bg-white dark:bg-gray-700 border border-border-light dark:border-gray-500 rounded-lg px-3 py-2 text-sm">
+                <select className="bg-white dark:bg-gray-700 border border-border-light dark:border-gray-500 dark:text-white rounded-lg px-3 py-2 text-sm">
                   <option>25 per page</option>
                 </select>
               </div>
@@ -291,7 +290,7 @@ export const AboutPage: React.FC = () => {
                   <button className="p-2 bg-blue-600 text-white rounded-md">
                     <Grid className="w-4 h-4" />
                   </button>
-                  <button className="p-2 text-gray-500">
+                  <button className="p-2 text-gray-500 dark:text-white">
                     <List className="w-4 h-4" />
                   </button>
                 </div>
@@ -342,7 +341,7 @@ export const AboutPage: React.FC = () => {
                   <button className="p-2 bg-blue-600 text-white rounded-md">
                     <Grid className="w-4 h-4" />
                   </button>
-                  <button className="p-2 text-gray-500">
+                  <button className="p-2 text-gray-500 dark:text-white">
                     <List className="w-4 h-4" />
                   </button>
                 </div>
@@ -358,11 +357,11 @@ export const AboutPage: React.FC = () => {
             visual={
               <div className="p-3 bg-gray-100 dark:bg-gray-600 rounded-lg">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-white w-4 h-4" />
                   <input
                     type="text"
                     placeholder="Search Pokémon..."
-                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-700 border border-border-light dark:border-gray-500 rounded-lg text-sm"
+                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-gray-700 border border-border-light dark:border-gray-500 dark:text-white rounded-lg text-sm"
                     value="pika"
                     readOnly
                   />
@@ -377,8 +376,7 @@ export const AboutPage: React.FC = () => {
             description="Use the generation filter to narrow down results to specific regions like Kanto, Johto, or Hoenn."
             visual={
               <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-600 rounded-lg">
-                <Filter className="w-4 h-4 text-gray-500" />
-                <select className="bg-white dark:bg-gray-700 border border-border-light dark:border-gray-500 rounded-lg px-3 py-2 text-sm">
+                <select className="bg-white dark:bg-gray-700 border border-border-light dark:border-gray-500 dark:text-white rounded-lg px-3 py-2 text-sm">
                   <option>Generation I (Kanto)</option>
                 </select>
               </div>
@@ -608,7 +606,7 @@ export const AboutPage: React.FC = () => {
         <div className="mb-6">
           <Link
             to="/"
-            className="block w-full px-6 py-4 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
+            className="block w-full px-6 py-4 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors font-bold text-lg shadow-lg hover:shadow-xl"
           >
             <div className="flex items-center justify-center gap-3">
               <Search className="w-6 h-6" />
