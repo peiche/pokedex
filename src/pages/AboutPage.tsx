@@ -619,6 +619,13 @@ export const AboutPage: React.FC = () => {
             Explore Types
           </Link>
           <Link
+            to="/abilities"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors font-medium border border-white/30"
+          >
+            <Zap className="w-4 h-4" />
+            Explore Abilities
+          </Link>
+          <Link
             to="/favorites"
             className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors font-medium border border-white/30"
           >
