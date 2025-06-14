@@ -220,57 +220,39 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
             </select>
           </div>
 
-          {/* View Mode and Items Per Page */}
-          <div className="flex items-center gap-4">
-            {/* View Mode Toggle */}
-            {enableViewModeToggle && onViewModeChange && (
-              <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-                <button
-                  onClick={() => onViewModeChange('grid')}
-                  className={`p-2 rounded-md transition-colors ${viewMode === 'grid'
-                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                    }`}
-                  disabled={isLoading}
-                  aria-label="Grid view"
-                >
-                  <Grid className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => onViewModeChange('list')}
-                  className={`p-2 rounded-md transition-colors ${viewMode === 'list'
-                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                    }`}
-                  disabled={isLoading}
-                  aria-label="List view"
-                >
-                  <List className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-
-            {/* Items Per Page */}
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Show:</span>
-              <select
-                value={itemsPerPage}
-                onChange={(e) => onItemsPerPageChange(parseInt(e.target.value) as ItemsPerPageOption)}
-                className="bg-gray-50 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+          {/* View Mode Toggle */}
+          {enableViewModeToggle && onViewModeChange && (
+            <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+              <button
+                onClick={() => onViewModeChange('grid')}
+                className={`p-2 rounded-md transition-colors ${viewMode === 'grid'
+                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  }`}
                 disabled={isLoading}
+                aria-label="Grid view"
               >
-                <option value={10}>10 per page</option>
-                <option value={25}>25 per page</option>
-                <option value={50}>50 per page</option>
-                <option value={100}>100 per page</option>
-              </select>
+                <Grid className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => onViewModeChange('list')}
+                className={`p-2 rounded-md transition-colors ${viewMode === 'list'
+                    ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  }`}
+                disabled={isLoading}
+                aria-label="List view"
+              >
+                <List className="w-4 h-4" />
+              </button>
             </div>
-          </div>
+          )}
         </div>
 
-        {/* Results Summary */}
+        {/* Results Summary and Items Per Page Row */}
         {(totalItems !== undefined || filteredItems !== undefined) && (
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between pt-4">
+            {/* Results Summary - Left Side */}
             <div className="text-sm text-gray-600 dark:text-gray-400">
               {filteredItems !== undefined && totalItems !== undefined ? (
                 hasActiveFilters ? (
@@ -289,6 +271,22 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
                   Filters active
                 </span>
               )}
+            </div>
+
+            {/* Items Per Page - Right Side */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Show:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => onItemsPerPageChange(parseInt(e.target.value) as ItemsPerPageOption)}
+                className="bg-gray-50 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+                disabled={isLoading}
+              >
+                <option value={10}>10 per page</option>
+                <option value={25}>25 per page</option>
+                <option value={50}>50 per page</option>
+                <option value={100}>100 per page</option>
+              </select>
             </div>
           </div>
         )}
