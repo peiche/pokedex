@@ -603,14 +603,22 @@ export const AboutPage: React.FC = () => {
         <p className="text-lg opacity-90 mb-6">
           Now that you know how to use all the features, dive into the world of Pokémon!
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        
+        {/* Full-width Start Browsing Pokemon button */}
+        <div className="mb-6">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors font-medium"
+            className="block w-full px-6 py-4 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 duration-200"
           >
-            <Search className="w-4 h-4" />
-            Start Browsing Pokémon
+            <div className="flex items-center justify-center gap-3">
+              <Search className="w-6 h-6" />
+              Start Browsing Pokémon
+            </div>
           </Link>
+        </div>
+        
+        {/* Secondary navigation buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             to="/types"
             className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors font-medium border border-white/30"
