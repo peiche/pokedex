@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Zap, Users } from 'lucide-react';
 import { useAllAbilities } from '../hooks/usePokemon';
+import { usePagePreferences } from '../hooks/useUIPreferences';
 import { useFilterSort, sortItems, filterBySearch } from '../hooks/useFilterSort';
 import { FilterSortControls } from '../components/common/FilterSortControls';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
@@ -9,9 +10,9 @@ import { Pagination } from '../components/common/Pagination';
 import { formatPokemonName } from '../utils/pokemon';
 import { PokeAPI } from 'pokeapi-types';
 
-type ViewMode = 'grid' | 'list';
-
 export const AbilitiesPage: React.FC = () => {
+  const { preferences, updatePagePreference } = usePagePreferences('abilities');
+  
   // Get all abilities for filtering and sorting
   const { data: allAbilitiesData, isLoading: isLoadingAll } = useAllAbilities(1, 1000);
 
@@ -24,11 +25,8 @@ export const AbilitiesPage: React.FC = () => {
     enableStatusFilter: false,
     availableSorts: ['name-asc', 'name-desc'],
     defaultSort: 'name-asc',
-    defaultItemsPerPage: 25
+    defaultItemsPerPage: preferences.itemsPerPage
   });
-
-  // View mode state (separate from filter/sort)
-  const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
 
   // Process and filter abilities
   const processedAbilities = useMemo(() => {
@@ -54,6 +52,15 @@ export const AbilitiesPage: React.FC = () => {
     filterSort.setCurrentPage(newPage);
     // Smooth scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleViewModeChange = (newViewMode: 'grid' | 'list') => {
+    updatePagePreference('viewMode', newViewMode);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: 10 | 25 | 50 | 100) => {
+    updatePagePreference('itemsPerPage', newItemsPerPage);
+    filterSort.setItemsPerPage(newItemsPerPage);
   };
 
   const isLoading = isLoadingAll;
@@ -148,12 +155,12 @@ export const AbilitiesPage: React.FC = () => {
         categoryFilter={filterSort.categoryFilter}
         statusFilter={filterSort.statusFilter}
         itemsPerPage={filterSort.itemsPerPage}
-        viewMode={viewMode}
+        viewMode={preferences.viewMode}
         onSearchChange={filterSort.setSearchQuery}
         onSortChange={filterSort.setSortBy}
         onGenerationFilterChange={filterSort.setGenerationFilter}
-        onItemsPerPageChange={filterSort.setItemsPerPage}
-        onViewModeChange={setViewMode}
+        onItemsPerPageChange={handleItemsPerPageChange}
+        onViewModeChange={handleViewModeChange}
         onResetFilters={filterSort.resetFilters}
         enableSearch={true}
         enableGenerationFilter={false}
@@ -167,7 +174,7 @@ export const AbilitiesPage: React.FC = () => {
       {/* Abilities Grid/List */}
       {paginatedAbilities.length > 0 ? (
         <>
-          {viewMode === 'grid' ? (
+          {preferences.viewMode === 'grid' ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {paginatedAbilities.map((ability) => (
                 <AbilityCard key={ability.name} ability={ability} />
@@ -220,7 +227,7 @@ export const AbilitiesPage: React.FC = () => {
       )}
 
       {/* About Section */}
-      <div>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           About Pokémon Abilities
         </h2>

@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Zap, Eye, EyeOff, Search } from 'lucide-react';
 import { usePokemonWithAbility } from '../hooks/usePokemon';
+import { usePagePreferences } from '../hooks/useUIPreferences';
 import { useFilterSort, sortItems, filterByGeneration, filterBySearch } from '../hooks/useFilterSort';
 import { FilterSortControls } from '../components/common/FilterSortControls';
 import { TypeBadge } from '../components/common/TypeBadge';
@@ -14,10 +15,9 @@ import {
 } from '../utils/pokemon';
 import { FavoriteButton } from '../components/common/FavoriteButton';
 
-type ViewMode = 'grid' | 'list';
-
 export const AbilityDetailPage: React.FC = () => {
   const { name } = useParams<{ name: string }>();
+  const { preferences, updatePagePreference } = usePagePreferences(`ability-${name}`);
 
   const { data, isLoading, error } = usePokemonWithAbility(name!);
 
@@ -29,12 +29,9 @@ export const AbilityDetailPage: React.FC = () => {
     enableCategoryFilter: true, // Enable category filter for primary/hidden abilities
     enableStatusFilter: false,
     availableSorts: ['pokedex-asc', 'pokedex-desc', 'name-asc', 'name-desc'],
-    defaultSort: 'pokedex-asc',
-    defaultItemsPerPage: 25
+    defaultSort: preferences.sortOrder === 'pokedex-asc' ? 'pokedex-asc' : 'pokedex-asc',
+    defaultItemsPerPage: preferences.itemsPerPage
   });
-
-  // View mode state
-  const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
 
   // Process and filter Pokemon
   const processedPokemon = useMemo(() => {
@@ -78,6 +75,15 @@ export const AbilityDetailPage: React.FC = () => {
       behavior: 'smooth',
       block: 'start'
     });
+  };
+
+  const handleViewModeChange = (newViewMode: 'grid' | 'list') => {
+    updatePagePreference('viewMode', newViewMode);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: 10 | 25 | 50 | 100) => {
+    updatePagePreference('itemsPerPage', newItemsPerPage);
+    filterSort.setItemsPerPage(newItemsPerPage);
   };
 
   if (isLoading) {
@@ -348,7 +354,7 @@ export const AbilityDetailPage: React.FC = () => {
       </div>
 
       {/* Ability Description */}
-      <div>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Ability Description
         </h2>
@@ -387,13 +393,13 @@ export const AbilityDetailPage: React.FC = () => {
         categoryFilter={filterSort.categoryFilter}
         statusFilter={filterSort.statusFilter}
         itemsPerPage={filterSort.itemsPerPage}
-        viewMode={viewMode}
+        viewMode={preferences.viewMode}
         onSearchChange={filterSort.setSearchQuery}
         onSortChange={filterSort.setSortBy}
         onGenerationFilterChange={filterSort.setGenerationFilter}
         onCategoryFilterChange={filterSort.setCategoryFilter}
-        onItemsPerPageChange={filterSort.setItemsPerPage}
-        onViewModeChange={setViewMode}
+        onItemsPerPageChange={handleItemsPerPageChange}
+        onViewModeChange={handleViewModeChange}
         onResetFilters={filterSort.resetFilters}
         enableSearch={true}
         enableGenerationFilter={true}
@@ -406,7 +412,7 @@ export const AbilityDetailPage: React.FC = () => {
       />
 
       {/* Pokemon List */}
-      <div>
+      <div id="pokemon-section" className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
             Pokémon with {formatPokemonName(name!)}
@@ -415,11 +421,11 @@ export const AbilityDetailPage: React.FC = () => {
 
         {/* Show skeleton while Pokemon data is loading */}
         {isPokemonDataLoading ? (
-          <AbilityPokemonSkeleton viewMode={viewMode} />
+          <AbilityPokemonSkeleton viewMode={preferences.viewMode} />
         ) : paginatedPokemon.length > 0 ? (
           <div className="space-y-6">
             <div className="animate-fade-in">
-              {viewMode === 'grid' ? (
+              {preferences.viewMode === 'grid' ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                   {paginatedPokemon.map((pokemonEntry) => (
                     <PokemonCard key={`${pokemonEntry.name}-${pokemonEntry.is_hidden}`} pokemonEntry={pokemonEntry} />

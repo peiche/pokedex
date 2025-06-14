@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Search } from 'lucide-react';
 import { usePokemonByType } from '../hooks/usePokemon';
-import { useViewPreference } from '../hooks/useViewPreference';
+import { usePagePreferences } from '../hooks/useUIPreferences';
 import { useFilterSort, sortItems, filterByGeneration, filterBySearch } from '../hooks/useFilterSort';
 import { FilterSortControls } from '../components/common/FilterSortControls';
 import { TypeBadge } from '../components/common/TypeBadge';
@@ -18,7 +18,7 @@ import {
 
 export const TypeDetailPage: React.FC = () => {
   const { name } = useParams<{ name: string }>();
-  const [viewMode, setViewMode] = useViewPreference(`type-${name}`);
+  const { preferences, updatePagePreference } = usePagePreferences(`type-${name}`);
 
   // Get all Pokemon of this type for filtering and sorting
   const { data, isLoading, error } = usePokemonByType(name!, 1, 1000);
@@ -30,9 +30,9 @@ export const TypeDetailPage: React.FC = () => {
     enableTypeFilter: false,
     enableCategoryFilter: false,
     enableStatusFilter: false,
-    availableSorts: ['name-asc', 'name-desc', 'pokedex-asc', 'pokedex-desc', 'popularity'],
-    defaultSort: 'pokedex-asc',
-    defaultItemsPerPage: 25
+    availableSorts: ['pokedex-asc', 'pokedex-desc', 'name-asc', 'name-desc'],
+    defaultSort: preferences.sortOrder === 'pokedex-asc' ? 'pokedex-asc' : 'pokedex-asc',
+    defaultItemsPerPage: preferences.itemsPerPage
   });
 
   // Process and filter Pokemon
@@ -69,6 +69,15 @@ export const TypeDetailPage: React.FC = () => {
       behavior: 'smooth',
       block: 'start'
     });
+  };
+
+  const handleViewModeChange = (newViewMode: 'grid' | 'list') => {
+    updatePagePreference('viewMode', newViewMode);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: 10 | 25 | 50 | 100) => {
+    updatePagePreference('itemsPerPage', newItemsPerPage);
+    filterSort.setItemsPerPage(newItemsPerPage);
   };
 
   if (isLoading) {
@@ -174,7 +183,7 @@ export const TypeDetailPage: React.FC = () => {
       </div>
 
       {/* Type Effectiveness Chart */}
-      <div>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Type Effectiveness
         </h2>
@@ -248,12 +257,12 @@ export const TypeDetailPage: React.FC = () => {
         categoryFilter={filterSort.categoryFilter}
         statusFilter={filterSort.statusFilter}
         itemsPerPage={filterSort.itemsPerPage}
-        viewMode={viewMode}
+        viewMode={preferences.viewMode}
         onSearchChange={filterSort.setSearchQuery}
         onSortChange={filterSort.setSortBy}
         onGenerationFilterChange={filterSort.setGenerationFilter}
-        onItemsPerPageChange={filterSort.setItemsPerPage}
-        onViewModeChange={setViewMode}
+        onItemsPerPageChange={handleItemsPerPageChange}
+        onViewModeChange={handleViewModeChange}
         onResetFilters={filterSort.resetFilters}
         enableSearch={true}
         enableGenerationFilter={true}
@@ -265,56 +274,58 @@ export const TypeDetailPage: React.FC = () => {
       />
 
       {/* Pokemon of this type */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          {formatPokemonName(name!)} Type Pokémon
-        </h2>
-      </div>
+      <div id="pokemon-section">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            {formatPokemonName(name!)} Type Pokémon
+          </h2>
+        </div>
 
-      {paginatedPokemon.length > 0 ? (
-        <>
-          <PokemonGrid
-            pokemon={paginatedPokemon}
-            viewMode={viewMode}
-          />
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={filterSort.currentPage}
-              totalPages={totalPages}
-              baseUrl={`/type/${name}`}
-              showPageInfo
-              totalItems={processedPokemon.length}
-              itemsPerPage={filterSort.itemsPerPage}
-              onPageChange={handlePageChange}
-              className="pt-8 mt-8 border-t border-border-light dark:border-gray-700"
+        {paginatedPokemon.length > 0 ? (
+          <>
+            <PokemonGrid
+              pokemon={paginatedPokemon}
+              viewMode={preferences.viewMode}
             />
-          )}
-        </>
-      ) : filterSort.searchQuery || filterSort.generationFilter !== 'all' ? (
-        <div className="text-center py-8">
-          <div className="w-16 h-16 mx-auto mb-4 text-gray-400">
-            <Search className="w-full h-full" />
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={filterSort.currentPage}
+                totalPages={totalPages}
+                baseUrl={`/type/${name}`}
+                showPageInfo
+                totalItems={processedPokemon.length}
+                itemsPerPage={filterSort.itemsPerPage}
+                onPageChange={handlePageChange}
+                className="pt-8 mt-8 border-t border-border-light dark:border-gray-700"
+              />
+            )}
+          </>
+        ) : filterSort.searchQuery || filterSort.generationFilter !== 'all' ? (
+          <div className="text-center py-8">
+            <div className="w-16 h-16 mx-auto mb-4 text-gray-400">
+              <Search className="w-full h-full" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              No Pokémon found
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              No {formatPokemonName(name!)} type Pokémon match your current search and filter criteria.
+            </p>
+            <button
+              onClick={filterSort.resetFilters}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
+            >
+              Clear filters and show all {formatPokemonName(name!)} type Pokémon
+            </button>
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            No Pokémon found
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">
-            No {formatPokemonName(name!)} type Pokémon match your current search and filter criteria.
-          </p>
-          <button
-            onClick={filterSort.resetFilters}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors border border-blue-700"
-          >
-            Clear filters and show all {formatPokemonName(name!)} type Pokémon
-          </button>
-        </div>
-      ) : (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          No Pokémon found for this type.
-        </div>
-      )}
+        ) : (
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            No Pokémon found for this type.
+          </div>
+        )}
+      </div>
     </div>
   );
 };

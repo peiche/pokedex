@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Search } from 'lucide-react';
 import { usePokemonList } from '../hooks/usePokemon';
-import { useViewPreference } from '../hooks/useViewPreference';
+import { usePagePreferences } from '../hooks/useUIPreferences';
 import { useFilterSort, sortItems, filterByGeneration, filterBySearch } from '../hooks/useFilterSort';
 import { FilterSortControls } from '../components/common/FilterSortControls';
 import { PokemonGrid } from '../components/pokemon/PokemonGrid';
@@ -10,7 +10,7 @@ import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { extractIdFromUrl } from '../utils/pokemon';
 
 export const HomePage: React.FC = () => {
-  const [viewMode, setViewMode] = useViewPreference('homepage');
+  const { preferences, updatePagePreference } = usePagePreferences('homepage');
   
   // Get all Pokemon for filtering and sorting
   const { data, isLoading, error } = usePokemonList(1, 1010);
@@ -22,9 +22,9 @@ export const HomePage: React.FC = () => {
     enableTypeFilter: false,
     enableCategoryFilter: false,
     enableStatusFilter: false,
-    availableSorts: ['name-asc', 'name-desc', 'pokedex-asc', 'pokedex-desc', 'popularity'],
-    defaultSort: 'pokedex-asc',
-    defaultItemsPerPage: 25
+    availableSorts: ['pokedex-asc', 'pokedex-desc', 'name-asc', 'name-desc'],
+    defaultSort: preferences.sortOrder === 'pokedex-asc' ? 'pokedex-asc' : 'pokedex-asc',
+    defaultItemsPerPage: preferences.itemsPerPage
   });
 
   // Process and filter Pokemon
@@ -56,6 +56,15 @@ export const HomePage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleViewModeChange = (newViewMode: 'grid' | 'list') => {
+    updatePagePreference('viewMode', newViewMode);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: 10 | 25 | 50 | 100) => {
+    updatePagePreference('itemsPerPage', newItemsPerPage);
+    filterSort.setItemsPerPage(newItemsPerPage);
+  };
+
   if (error) {
     return (
       <div className="text-center py-12">
@@ -77,6 +86,25 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+          Pokédex
+        </h1>
+        <p className="text-lg text-gray-600 dark:text-gray-400">
+          Discover and learn about Pokémon
+        </p>
+        {processedPokemon.length > 0 && (
+          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
+            {filterSort.generationFilter === 'all' 
+              ? `${processedPokemon.length} Pokémon available`
+              : `${processedPokemon.length} Pokémon in Generation ${filterSort.generationFilter.replace('gen', '')}`
+            }
+          </p>
+        )}
+      </div>
+
+      {/* Filter and Sort Controls */}
       <FilterSortControls
         searchQuery={filterSort.searchQuery}
         sortBy={filterSort.sortBy}
@@ -85,12 +113,12 @@ export const HomePage: React.FC = () => {
         categoryFilter={filterSort.categoryFilter}
         statusFilter={filterSort.statusFilter}
         itemsPerPage={filterSort.itemsPerPage}
-        viewMode={viewMode}
+        viewMode={preferences.viewMode}
         onSearchChange={filterSort.setSearchQuery}
         onSortChange={filterSort.setSortBy}
         onGenerationFilterChange={filterSort.setGenerationFilter}
-        onItemsPerPageChange={filterSort.setItemsPerPage}
-        onViewModeChange={setViewMode}
+        onItemsPerPageChange={handleItemsPerPageChange}
+        onViewModeChange={handleViewModeChange}
         onResetFilters={filterSort.resetFilters}
         enableSearch={true}
         enableGenerationFilter={true}
@@ -110,7 +138,7 @@ export const HomePage: React.FC = () => {
         <>
           <PokemonGrid 
             pokemon={paginatedPokemon} 
-            viewMode={viewMode}
+            viewMode={preferences.viewMode}
           />
 
           {/* Pagination */}

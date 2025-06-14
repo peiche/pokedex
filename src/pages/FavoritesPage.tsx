@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Search, Trash2, ArrowRight } from 'lucide-react';
 import { useFavorites } from '../hooks/useFavorites';
-import { useViewPreference } from '../hooks/useViewPreference';
+import { usePagePreferences } from '../hooks/useUIPreferences';
 import { useFilterSort, sortItems, filterByGeneration, filterBySearch } from '../hooks/useFilterSort';
 import { FilterSortControls } from '../components/common/FilterSortControls';
 import { PokemonGrid } from '../components/pokemon/PokemonGrid';
@@ -11,7 +11,7 @@ import { extractIdFromUrl } from '../utils/pokemon';
 
 export const FavoritesPage: React.FC = () => {
   const { favorites, favoritesCount, clearAllFavorites } = useFavorites();
-  const [viewMode, setViewMode] = useViewPreference('favorites');
+  const { preferences, updatePagePreference } = usePagePreferences('favorites');
   
   // Filter and sort state management
   const filterSort = useFilterSort({
@@ -22,7 +22,7 @@ export const FavoritesPage: React.FC = () => {
     enableStatusFilter: false,
     availableSorts: ['name-asc', 'name-desc', 'pokedex-asc', 'pokedex-desc', 'date-added'],
     defaultSort: 'date-added',
-    defaultItemsPerPage: 25
+    defaultItemsPerPage: preferences.itemsPerPage
   });
 
   // Convert favorites to the format expected by our utility functions
@@ -72,6 +72,15 @@ export const FavoritesPage: React.FC = () => {
     filterSort.setCurrentPage(newPage);
     // Smooth scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleViewModeChange = (newViewMode: 'grid' | 'list') => {
+    updatePagePreference('viewMode', newViewMode);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: 10 | 25 | 50 | 100) => {
+    updatePagePreference('itemsPerPage', newItemsPerPage);
+    filterSort.setItemsPerPage(newItemsPerPage);
   };
 
   const handleClearAll = () => {
@@ -124,12 +133,12 @@ export const FavoritesPage: React.FC = () => {
               categoryFilter={filterSort.categoryFilter}
               statusFilter={filterSort.statusFilter}
               itemsPerPage={filterSort.itemsPerPage}
-              viewMode={viewMode}
+              viewMode={preferences.viewMode}
               onSearchChange={filterSort.setSearchQuery}
               onSortChange={filterSort.setSortBy}
               onGenerationFilterChange={filterSort.setGenerationFilter}
-              onItemsPerPageChange={filterSort.setItemsPerPage}
-              onViewModeChange={setViewMode}
+              onItemsPerPageChange={handleItemsPerPageChange}
+              onViewModeChange={handleViewModeChange}
               onResetFilters={filterSort.resetFilters}
               enableSearch={true}
               enableGenerationFilter={true}
@@ -156,7 +165,7 @@ export const FavoritesPage: React.FC = () => {
             <>
               <PokemonGrid 
                 pokemon={paginatedFavorites} 
-                viewMode={viewMode}
+                viewMode={preferences.viewMode}
               />
 
               {/* Pagination */}
