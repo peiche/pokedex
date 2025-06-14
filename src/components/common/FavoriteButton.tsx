@@ -66,14 +66,12 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     default: `
       bg-white dark:bg-gray-800 
       border border-border-light dark:border-gray-600 
-      hover:bg-gray-50 dark:hover:bg-gray-700 
-      shadow-sm hover:shadow-md
+      hover:bg-gray-50 dark:hover:bg-gray-700
     `,
     overlay: `
       bg-white/90 dark:bg-gray-800/90 
       backdrop-blur-sm 
       hover:bg-white dark:hover:bg-gray-800
-      shadow-lg
     `,
     minimal: `
       bg-transparent 
@@ -103,7 +101,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
           ${iconSizes[size]}
           transition-all duration-200
           ${favorited 
-            ? 'text-red-500 fill-red-500 drop-shadow-sm' 
+            ? 'text-red-500 fill-red-500' 
             : 'text-gray-400 dark:text-gray-500 group-hover:text-red-400 dark:group-hover:text-red-400 opacity-0 group-hover:opacity-100'
           }
           ${isAnimating ? 'scale-125' : ''}
