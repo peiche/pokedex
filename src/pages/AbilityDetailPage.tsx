@@ -411,8 +411,8 @@ export const AbilityDetailPage: React.FC = () => {
         isLoading={isLoading}
       />
 
-      {/* Pokemon List */}
-      <div id="pokemon-section" className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      {/* Pokemon List - Clean layout without decorative container styling */}
+      <div id="pokemon-section">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
             Pokémon with {formatPokemonName(name!)}
