@@ -12,10 +12,10 @@ import { extractIdFromUrl } from '../utils/pokemon';
 export const FavoritesPage: React.FC = () => {
   const { favorites, favoritesCount, clearAllFavorites, removeFromFavorites } = useFavorites();
   const { preferences, updatePagePreference } = usePagePreferences('favorites');
-  
+
   // State for managing exit animations
   const [exitingPokemonIds, setExitingPokemonIds] = useState<Set<number>>(new Set());
-  
+
   // Filter and sort state management
   const filterSort = useFilterSort({
     enableSearch: true,
@@ -122,8 +122,20 @@ export const FavoritesPage: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
             Favorite Pokémon
           </h1>
+
+          {/* Clear All Button */}
+          {favoritesCount > 0 && (
+            <button
+              onClick={handleClearAll}
+              className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors border border-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+              aria-label="Clear all favorites"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span className="hidden sm:inline">Clear All</span>
+            </button>
+          )}
         </div>
-        
+
         {favoritesCount > 0 ? (
           <div className="space-y-2">
             <p className="text-lg text-gray-600 dark:text-gray-400">
@@ -169,23 +181,13 @@ export const FavoritesPage: React.FC = () => {
               filteredItems={processedFavorites.length}
               className="flex-1"
             />
-
-            {/* Clear All Button */}
-            <button
-              onClick={handleClearAll}
-              className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors border border-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
-              aria-label="Clear all favorites"
-            >
-              <Trash2 className="w-4 h-4" />
-              <span className="hidden sm:inline">Clear All</span>
-            </button>
           </div>
 
           {/* Favorites Grid/List */}
           {paginatedFavorites.length > 0 ? (
             <>
-              <PokemonGrid 
-                pokemon={paginatedFavorites} 
+              <PokemonGrid
+                pokemon={paginatedFavorites}
                 viewMode={preferences.viewMode}
                 exitingPokemonIds={exitingPokemonIds}
                 onAnimationEnd={handleAnimationEnd}
@@ -233,16 +235,16 @@ export const FavoritesPage: React.FC = () => {
             <div className="w-24 h-24 mx-auto mb-6 text-gray-300 dark:text-gray-600">
               <Heart className="w-full h-full" />
             </div>
-            
+
             <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
               No favorites yet
             </h3>
-            
+
             <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
-              Start exploring and click the heart icon on any Pokémon card to add them to your favorites. 
+              Start exploring and click the heart icon on any Pokémon card to add them to your favorites.
               Your favorite Pokémon will appear here for quick access.
             </p>
-            
+
             <div className="space-y-4">
               <Link
                 to="/"
@@ -251,19 +253,19 @@ export const FavoritesPage: React.FC = () => {
                 <Search className="w-4 h-4" />
                 Browse All Pokémon
               </Link>
-              
+
               <div className="text-sm text-gray-500 dark:text-gray-400">
                 <p>Or explore by category:</p>
                 <div className="flex justify-center gap-4 mt-2">
-                  <Link 
-                    to="/types" 
+                  <Link
+                    to="/types"
                     className="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
                   >
                     Types <ArrowRight className="w-3 h-3" />
                   </Link>
                   <span>•</span>
-                  <Link 
-                    to="/abilities" 
+                  <Link
+                    to="/abilities"
                     className="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
                   >
                     Abilities <ArrowRight className="w-3 h-3" />

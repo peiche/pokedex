@@ -111,7 +111,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
           transition-all duration-200
           ${favorited 
             ? 'text-red-500 fill-red-500' 
-            : 'text-gray-400 dark:text-gray-500 group-hover:text-red-400 dark:group-hover:text-red-400 opacity-0 group-hover:opacity-100'
+            : 'text-gray-400 dark:text-gray-500 group-hover:text-red-400 dark:group-hover:text-red-400'
           }
           ${isAnimating ? 'scale-125' : ''}
         `}
