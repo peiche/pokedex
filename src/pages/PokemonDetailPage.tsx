@@ -3,7 +3,6 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowLeft, Ruler, Weight, Zap, ExternalLink } from 'lucide-react';
 import { usePokemon, usePokemonSpecies, useAbility } from '../hooks/usePokemon';
 import { TypeBadge } from '../components/common/TypeBadge';
-import { FavoriteButton } from '../components/common/FavoriteButton';
 import { StatBar } from '../components/pokemon/StatBar';
 import { EvolutionChain } from '../components/pokemon/EvolutionChain';
 import { Accordion } from '../components/common/Accordion';
@@ -137,12 +136,6 @@ export const PokemonDetailPage: React.FC = () => {
     (entry) => entry.language.name === 'en'
   )?.genus;
 
-  // Create pokemon object for FavoriteButton
-  const pokemonForFavorite = {
-    name: pokemon.name,
-    url: `https://pokeapi.co/api/v2/pokemon/${pokemon.id}/`
-  };
-
   // Prepare accordion items for abilities
   const abilityAccordionItems = pokemon.abilities.map((ability) => ({
     id: ability.ability.name,
@@ -171,17 +164,7 @@ export const PokemonDetailPage: React.FC = () => {
   }));
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 relative">
-      {/* Persistent Favorite Button - Fixed position */}
-      <div className="fixed top-20 right-4 z-50 md:absolute md:top-4 md:right-4">
-        <FavoriteButton 
-          pokemon={pokemonForFavorite} 
-          size="lg" 
-          variant="overlay"
-          className="shadow-lg"
-        />
-      </div>
-
+    <div className="max-w-4xl mx-auto space-y-8">
       {/* Navigation */}
       <div className="flex items-center justify-between">
         <button
