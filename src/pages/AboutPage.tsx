@@ -15,7 +15,10 @@ import {
   Layers,
   TrendingUp,
   Heart,
-  Settings
+  Settings,
+  Sun,
+  Moon,
+  Monitor
 } from 'lucide-react';
 import { TypeBadge } from '../components/common/TypeBadge';
 
@@ -121,6 +124,71 @@ export const AboutPage: React.FC = () => {
             title="Customizable Experience"
             description="Personalize your browsing with adjustable view modes, sorting options, and results per page settings."
           />
+        </div>
+      </div>
+
+      {/* Theme and Display Modes */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+          <Sun className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+          Light & Dark Mode
+        </h2>
+        
+        <div className="space-y-6">
+          <StepCard
+            step={1}
+            title="Finding the Theme Toggle"
+            description="Look for the theme toggle button in the top-right corner of the header, next to the mobile menu button. It displays a sun icon in dark mode and a moon icon in light mode."
+            visual={
+              <div className="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-600 rounded-lg">
+                <div className="flex items-center gap-2 p-2 bg-white dark:bg-gray-700 rounded-lg border border-border-light dark:border-gray-500">
+                  <Sun className="w-5 h-5 text-orange-500" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Light Mode</span>
+                </div>
+                <span className="text-sm text-gray-500">or</span>
+                <div className="flex items-center gap-2 p-2 bg-white dark:bg-gray-700 rounded-lg border border-border-light dark:border-gray-500">
+                  <Moon className="w-5 h-5 text-blue-500" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Dark Mode</span>
+                </div>
+              </div>
+            }
+          />
+          
+          <StepCard
+            step={2}
+            title="Switching Between Modes"
+            description="Click the theme toggle button to instantly switch between light and dark modes. The change applies immediately across the entire application with smooth transitions."
+          />
+          
+          <StepCard
+            step={3}
+            title="System Preference Detection"
+            description="When you first visit Poke-Vista, the theme automatically matches your device's system preference. If your device is set to dark mode, the site will load in dark mode, and vice versa."
+            visual={
+              <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-600 rounded-lg">
+                <Monitor className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Automatically detects your system preference
+                </span>
+              </div>
+            }
+          />
+          
+          <StepCard
+            step={4}
+            title="Persistent Theme Choice"
+            description="Your theme preference is automatically saved to your browser's local storage. When you return to Poke-Vista, it will remember your choice and load in your preferred mode."
+          />
+        </div>
+
+        <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+          <h4 className="text-sm font-medium text-purple-900 dark:text-purple-200 mb-2">
+            🌙 Dark Mode Benefits
+          </h4>
+          <p className="text-sm text-purple-800 dark:text-purple-300">
+            Dark mode reduces eye strain in low-light environments and can help save battery life on devices with OLED screens. 
+            All colors and contrasts are carefully optimized to maintain readability and visual hierarchy in both themes.
+          </p>
         </div>
       </div>
 
