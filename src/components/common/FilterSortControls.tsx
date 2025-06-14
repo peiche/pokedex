@@ -109,30 +109,27 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
   return (
     <div className={className}>
       <div className="space-y-6">
-        {/* Search Bar */}
+        {/* Search Bar with Inline Reset Button */}
         {enableSearch && (
-          <div className="flex gap-2 relative">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search..."
-                value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
-                disabled={isLoading}
-              />
-            </div>
-
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 z-10" />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="w-full pl-10 pr-12 py-2 bg-gray-50 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+              disabled={isLoading}
+            />
             {hasActiveFilters && (
               <button
                 onClick={onResetFilters}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md transition-colors z-10"
                 disabled={isLoading}
                 title="Clear all filters"
+                aria-label="Clear all filters"
               >
                 <RotateCcw className="w-4 h-4" />
-                <span className="hidden sm:inline">Reset</span>
               </button>
             )}
           </div>
