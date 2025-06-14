@@ -182,8 +182,8 @@ export const TypeDetailPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Type Effectiveness Chart */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      {/* Type Effectiveness Chart - Clean layout without decorative container styling */}
+      <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Type Effectiveness
         </h2>
