@@ -176,7 +176,7 @@ export const AboutPage: React.FC = () => {
           <StepCard
             step={4}
             title="Sort Results"
-            description="Choose how to sort Pokémon: by Poke-Vista number, name (A-Z or Z-A), or generation."
+            description="Choose how to sort Pokémon: by Pokémon number, name (A-Z or Z-A), or generation."
           />
         </div>
       </div>
