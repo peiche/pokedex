@@ -24,7 +24,7 @@ export const AboutPage: React.FC = () => {
     description: string;
     children?: React.ReactNode;
   }> = ({ icon, title, description, children }) => (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 p-6">
+    <div>
       <div className="flex items-start gap-4">
         <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 rounded-lg flex items-center justify-center">
           {icon}
@@ -48,7 +48,7 @@ export const AboutPage: React.FC = () => {
     description: string;
     visual?: React.ReactNode;
   }> = ({ step, title, description, visual }) => (
-    <div className="bg-background-light-secondary dark:bg-gray-700 rounded-lg p-6 border border-border-light dark:border-gray-600">
+    <div>
       <div className="flex items-start gap-4">
         <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
           {step}
@@ -83,8 +83,8 @@ export const AboutPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Main Features Overview */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      {/* Main Features Overview - Removed gray background, padding, and borders */}
+      <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Main Features
         </h2>
