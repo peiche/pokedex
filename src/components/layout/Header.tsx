@@ -1,16 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Menu, X, Sun, Moon, Zap, Settings, Heart } from 'lucide-react';
+import { Search, Menu, X, Sun, Moon, Zap, Heart } from 'lucide-react';
 import { useCombinedSearch } from '../../hooks/usePokemon';
 import { debounce, formatPokemonName, extractIdFromUrl } from '../../utils/pokemon';
 import { useTheme } from '../../contexts/ThemeContext';
-import { PreferencesPanel } from '../common/PreferencesPanel';
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const [showPreferences, setShowPreferences] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
@@ -160,15 +158,6 @@ export const Header: React.FC = () => {
 
               {/* Controls */}
               <div className="flex items-center gap-2">
-                {/* Preferences Button */}
-                <button
-                  onClick={() => setShowPreferences(true)}
-                  className="p-2 rounded-lg bg-background-light-secondary dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-background-neutral-muted dark:hover:bg-gray-700 transition-colors border border-border-light dark:border-gray-700"
-                  aria-label="Open preferences"
-                >
-                  <Settings className="w-5 h-5" />
-                </button>
-
                 {/* Theme Toggle */}
                 <button
                   onClick={toggleTheme}
@@ -242,12 +231,6 @@ export const Header: React.FC = () => {
           )}
         </div>
       </header>
-
-      {/* Preferences Panel */}
-      <PreferencesPanel 
-        isOpen={showPreferences} 
-        onClose={() => setShowPreferences(false)} 
-      />
     </>
   );
 };

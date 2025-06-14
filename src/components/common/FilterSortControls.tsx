@@ -107,12 +107,12 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
     statusFilter !== 'all';
 
   return (
-    <div className={className}>
+    <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 p-6 ${className}`}>
       <div className="space-y-6">
         {/* Search Bar */}
         {enableSearch && (
           <div className="flex gap-2 relative">
-            <div className="relative flex-1 max-w-100">
+            <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
@@ -127,8 +127,8 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
             {hasActiveFilters && (
               <button
                 onClick={onResetFilters}
-                className="absolute right-1.5 top-0 bottom-0 my-1.5 flex items-center gap-2 px-2 py-0.5 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
-                disabled={isLoading || !hasActiveFilters}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
+                disabled={isLoading}
                 title="Clear all filters"
               >
                 <RotateCcw className="w-4 h-4" />
@@ -144,26 +144,23 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
           <div className="flex flex-wrap items-center gap-4">
             {/* Generation Filter */}
             {enableGenerationFilter && (
-              <div className="flex items-center gap-2">
-                {/* <Filter className="w-4 h-4 text-gray-500" /> */}
-                <select
-                  value={generationFilter}
-                  onChange={(e) => onGenerationFilterChange(e.target.value as FilterOption)}
-                  className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
-                  disabled={isLoading}
-                >
-                  <option value="all">All Generations</option>
-                  <option value="gen1">Generation I (Kanto)</option>
-                  <option value="gen2">Generation II (Johto)</option>
-                  <option value="gen3">Generation III (Hoenn)</option>
-                  <option value="gen4">Generation IV (Sinnoh)</option>
-                  <option value="gen5">Generation V (Unova)</option>
-                  <option value="gen6">Generation VI (Kalos)</option>
-                  <option value="gen7">Generation VII (Alola)</option>
-                  <option value="gen8">Generation VIII (Galar)</option>
-                  <option value="gen9">Generation IX (Paldea)</option>
-                </select>
-              </div>
+              <select
+                value={generationFilter}
+                onChange={(e) => onGenerationFilterChange(e.target.value as FilterOption)}
+                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
+                disabled={isLoading}
+              >
+                <option value="all">All Generations</option>
+                <option value="gen1">Generation I (Kanto)</option>
+                <option value="gen2">Generation II (Johto)</option>
+                <option value="gen3">Generation III (Hoenn)</option>
+                <option value="gen4">Generation IV (Sinnoh)</option>
+                <option value="gen5">Generation V (Unova)</option>
+                <option value="gen6">Generation VI (Kalos)</option>
+                <option value="gen7">Generation VII (Alola)</option>
+                <option value="gen8">Generation VIII (Galar)</option>
+                <option value="gen9">Generation IX (Paldea)</option>
+              </select>
             )}
 
             {/* Type Filter */}
@@ -255,6 +252,22 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
                 </button>
               </div>
             )}
+
+            {/* Items Per Page */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Show:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => onItemsPerPageChange(parseInt(e.target.value) as ItemsPerPageOption)}
+                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
+                disabled={isLoading}
+              >
+                <option value={10}>10 per page</option>
+                <option value={25}>25 per page</option>
+                <option value={50}>50 per page</option>
+                <option value={100}>100 per page</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -279,22 +292,6 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
                   Filters active
                 </span>
               )}
-            </div>
-
-            {/* Items Per Page */}
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Show:</span>
-              <select
-                value={itemsPerPage}
-                onChange={(e) => onItemsPerPageChange(parseInt(e.target.value) as ItemsPerPageOption)}
-                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
-                disabled={isLoading}
-              >
-                <option value={10}>10 per page</option>
-                <option value={25}>25 per page</option>
-                <option value={50}>50 per page</option>
-                <option value={100}>100 per page</option>
-              </select>
             </div>
           </div>
         )}
