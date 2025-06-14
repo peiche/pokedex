@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Search } from 'lucide-react';
+import { ArrowLeft, Search, Layers } from 'lucide-react';
 import { usePokemonByType } from '../hooks/usePokemon';
 import { usePagePreferences } from '../hooks/useUIPreferences';
 import { useFilterSort, sortItems, filterByGeneration, filterBySearch } from '../hooks/useFilterSort';
@@ -162,24 +162,26 @@ export const TypeDetailPage: React.FC = () => {
         Back to Types
       </Link>
 
-      {/* Type Header */}
-      <div
-        className="rounded-2xl shadow-lg p-8 text-center"
+      {/* Type Header - Updated to match ability page layout */}
+      <div 
+        className="rounded-2xl shadow-lg p-8 text-white"
         style={{ backgroundColor }}
       >
-        <h1
-          className="text-5xl font-bold mb-4"
-          style={{ color: textColor }}
-        >
-          {formatPokemonName(name!)} Type
-        </h1>
-        <p
-          className="text-xl opacity-90"
-          style={{ color: textColor }}
-        >
-          {processedPokemon.length} Pokémon found
-          {filterSort.generationFilter !== 'all' && ` in Generation ${filterSort.generationFilter.replace('gen', '')}`}
-        </p>
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0 w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
+            <Layers className="w-8 h-8" />
+          </div>
+
+          <div className="flex-1">
+            <h1 className="text-4xl font-bold mb-2">
+              {formatPokemonName(name!)}
+            </h1>
+            <p className="text-xl opacity-90 mb-4">
+              {processedPokemon.length} Pokémon found
+              {filterSort.generationFilter !== 'all' && ` in Generation ${filterSort.generationFilter.replace('gen', '')}`}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Type Effectiveness Chart - Clean layout without decorative container styling */}
