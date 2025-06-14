@@ -90,8 +90,8 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
     switch (sort) {
       case 'name-asc': return 'Name (A-Z)';
       case 'name-desc': return 'Name (Z-A)';
-      case 'pokedex-asc': return 'Pokédex Number (Ascending)';
-      case 'pokedex-desc': return 'Pokédex Number (Descending)';
+      case 'pokedex-asc': return 'Poke-Vista Number (Ascending)';
+      case 'pokedex-desc': return 'Poke-Vista Number (Descending)';
       case 'date-added': return 'Date Added';
       case 'popularity': return 'Popularity';
       case 'type': return 'Type';

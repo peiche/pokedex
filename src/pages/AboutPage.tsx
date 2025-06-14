@@ -75,11 +75,11 @@ export const AboutPage: React.FC = () => {
       {/* Header */}
       <div className="text-center">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          About Pokédex
+          About Poke-Vista
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto">
           Your comprehensive guide to exploring the world of Pokémon. Learn how to use all the features 
-          of this modern Pokédex to discover, research, and understand Pokémon like never before.
+          of this modern Poke-Vista to discover, research, and understand Pokémon like never before.
         </p>
       </div>
 
@@ -176,7 +176,7 @@ export const AboutPage: React.FC = () => {
           <StepCard
             step={4}
             title="Sort Results"
-            description="Choose how to sort Pokémon: by Pokédex number, name (A-Z or Z-A), or generation."
+            description="Choose how to sort Pokémon: by Poke-Vista number, name (A-Z or Z-A), or generation."
           />
         </div>
       </div>

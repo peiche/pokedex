@@ -1,6 +1,6 @@
-# Pokédex
+# Poke-Vista
 
-A modern, responsive, and feature-rich Pokédex built with React, React Query, and Tailwind CSS. Explore the world of Pokémon with seamless browse, powerful search, and beautiful official artwork.
+A modern, responsive, and feature-rich Poke-Vista built with React, React Query, and Tailwind CSS. Explore the world of Pokémon with seamless browse, powerful search, and beautiful official artwork.
 
 ## Features
 
@@ -8,7 +8,7 @@ A modern, responsive, and feature-rich Pokédex built with React, React Query, a
 * **📱 Fully Responsive:** Built with Tailwind CSS and designed to look great on any device, from mobile phones to large desktop displays.
 * **🔍 Comprehensive Search:** Easily find Pokémon, types, and abilities with a robust search functionality.
 * **📖 Browse & Explore:** Navigate through Pokémon, types, and abilities with intuitive browse features.
-* **🖼️ Official Artwork:** Experience the Pokédex with high-quality official Pokémon artwork.
+* **🖼️ Official Artwork:** Experience the Poke-Vista with high-quality official Pokémon artwork.
 * **🔗 Bookmarkable URLs:** Seamless routing allows for easy bookmarking of individual Pokémon, types, and abilities.
 * **📊 Detailed Information:** Access a wealth of information for each Pokémon, including stats, abilities, types, and more.
 * **✨ Lucide Icons:** Beautiful and consistent iconography provided by Lucide Icons.
@@ -37,7 +37,7 @@ To get a local copy up and running, follow these simple steps.
 
 1.  Clone the repo
     ```sh
-    git clone [https://github.com/](https://github.com/)[your-username]/pokedex.git
+    git clone [https://github.com/](https://github.com/)[your-username]/poke-vista.git
     ```
 2.  Install NPM packages
     ```sh
@@ -78,4 +78,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Paul Eiche - [@wavetree](https://twitter.com/wavetree) - peiche@gmail.com
 
-Project Link: https://github.com/peiche/pokedex
+Project Link: https://github.com/peiche/poke-vista

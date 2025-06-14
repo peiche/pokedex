@@ -62,10 +62,10 @@ export const Header: React.FC = () => {
             <Link
               to="/"
               className="flex items-center gap-2 font-bold text-xl text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              aria-label="Go to Pokédex home"
+              aria-label="Go to Poke-Vista home"
             >
               <Zap className="w-8 h-8 text-yellow-500" />
-              <span>Pokédex</span>
+              <span>Poke-Vista</span>
             </Link>
 
             {/* Desktop Navigation */}
