@@ -171,7 +171,17 @@ export const PokemonDetailPage: React.FC = () => {
   }));
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8 relative">
+      {/* Persistent Favorite Button - Fixed position */}
+      <div className="fixed top-20 right-4 z-50 md:absolute md:top-4 md:right-4">
+        <FavoriteButton 
+          pokemon={pokemonForFavorite} 
+          size="lg" 
+          variant="overlay"
+          className="shadow-lg"
+        />
+      </div>
+
       {/* Navigation */}
       <div className="flex items-center justify-between">
         <button
@@ -210,16 +220,7 @@ export const PokemonDetailPage: React.FC = () => {
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 overflow-hidden">
         <div className="flex flex-col lg:flex-row">
           {/* Image Section */}
-          <div className="lg:w-1/2 p-8 bg-gradient-to-br from-background-blue-subtle to-background-purple-subtle dark:from-gray-700 dark:to-gray-600 relative">
-            {/* Favorite Button - Positioned in top-right of image section */}
-            <div className="absolute top-4 right-4 z-10">
-              <FavoriteButton 
-                pokemon={pokemonForFavorite} 
-                size="lg" 
-                variant="overlay"
-              />
-            </div>
-            
+          <div className="lg:w-1/2 p-8 bg-gradient-to-br from-background-blue-subtle to-background-purple-subtle dark:from-gray-700 dark:to-gray-600">
             <div className="aspect-square max-w-sm mx-auto">
               {imageUrl ? (
                 <img
