@@ -308,8 +308,8 @@ export const PokemonDetailPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Section */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      {/* Base Stats Section - Clean layout without decorative container styling */}
+      <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Base Stats
         </h2>
@@ -330,8 +330,8 @@ export const PokemonDetailPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Abilities Section with Accordion */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      {/* Abilities Section - Clean layout without decorative container styling */}
+      <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Abilities
         </h2>
@@ -345,9 +345,9 @@ export const PokemonDetailPage: React.FC = () => {
         />
       </div>
 
-      {/* Evolution Chain */}
+      {/* Evolution Chain - Clean layout without decorative container styling */}
       {species && (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+        <div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             Evolution Chain
           </h2>
