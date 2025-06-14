@@ -4,6 +4,8 @@ import { ChevronRight } from 'lucide-react';
 import { useEvolutionChain, usePokemon } from '../../hooks/usePokemon';
 import { formatPokemonName, extractIdFromUrl } from '../../utils/pokemon';
 import { LoadingSpinner } from '../common/LoadingSpinner';
+import { TypeBadge } from '../common/TypeBadge';
+import { FavoriteButton } from '../common/FavoriteButton';
 import { PokeAPI } from 'pokeapi-types';
 
 interface EvolutionChainProps {
@@ -23,9 +25,18 @@ const EvolutionNode: React.FC<EvolutionNodeProps> = ({ species }) => {
   
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center p-4">
-        <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mb-2"></div>
-        <div className="w-16 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+      <div className="group relative bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 overflow-hidden animate-pulse">
+        <div className="p-6">
+          <div className="w-24 h-24 mx-auto mb-4 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
+          <div className="text-center space-y-2">
+            <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded mx-auto w-3/4"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mx-auto w-16"></div>
+            <div className="flex justify-center gap-1">
+              <div className="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+              <div className="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -35,29 +46,66 @@ const EvolutionNode: React.FC<EvolutionNodeProps> = ({ species }) => {
   const imageUrl = pokemon.sprites?.other?.['official-artwork']?.front_default || 
                    pokemon.sprites?.front_default;
 
+  // Create pokemon object for FavoriteButton
+  const pokemonForFavorite = {
+    name: species.name,
+    url: species.url
+  };
+
   return (
-    <Link
-      to={`/pokemon/${pokemonId}`}
-      className="flex flex-col items-center p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group"
-      aria-label={`View ${formatPokemonName(species.name)}`}
-    >
-      <div className="w-20 h-20 mb-2 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden group-hover:scale-110 transition-transform">
-        {imageUrl && (
-          <img
-            src={imageUrl}
-            alt={formatPokemonName(species.name)}
-            className="w-full h-full object-contain"
-            loading="lazy"
-          />
-        )}
+    <div className="group relative bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300 overflow-hidden">
+      {/* Favorite Button - Positioned absolutely in top-right corner */}
+      <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <FavoriteButton 
+          pokemon={pokemonForFavorite} 
+          size="sm" 
+          variant="overlay"
+          showTooltip={false}
+        />
       </div>
-      <span className="text-sm font-medium text-gray-900 dark:text-white text-center">
-        {formatPokemonName(species.name)}
-      </span>
-      <span className="text-xs text-gray-500">
-        #{pokemonId.toString().padStart(3, '0')}
-      </span>
-    </Link>
+
+      <Link
+        to={`/pokemon/${pokemonId}`}
+        className="block p-6"
+        aria-label={`View ${formatPokemonName(species.name)}`}
+      >
+        {/* Pokemon Image */}
+        <div className="relative w-24 h-24 mx-auto mb-4">
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt={formatPokemonName(species.name)}
+              className="w-full h-full object-contain"
+              loading="lazy"
+            />
+          )}
+        </div>
+
+        {/* Pokemon Info */}
+        <div className="text-center">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            {formatPokemonName(species.name)}
+          </h3>
+          
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+            #{pokemonId.toString().padStart(3, '0')}
+          </p>
+
+          {/* Types */}
+          {pokemon.types && (
+            <div className="flex justify-center gap-1 min-h-[24px]">
+              {pokemon.types.map((type) => (
+                <TypeBadge 
+                  key={type.type.name} 
+                  type={type.type.name} 
+                  size="sm"
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </Link>
+    </div>
   );
 };
 
@@ -104,15 +152,44 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ speciesUrl }) =>
   }
 
   return (
-    <div className="flex items-center justify-center flex-wrap gap-4">
-      {evolutions.map((species, index) => (
-        <React.Fragment key={species.name}>
-          <EvolutionNode species={species} />
-          {index < evolutions.length - 1 && (
-            <ChevronRight className="w-6 h-6 text-gray-400 flex-shrink-0" />
-          )}
-        </React.Fragment>
-      ))}
+    <div className="space-y-6">
+      {/* Mobile Layout - Vertical Stack */}
+      <div className="block sm:hidden space-y-4">
+        {evolutions.map((species, index) => (
+          <React.Fragment key={species.name}>
+            <div className="flex justify-center">
+              <div className="w-full max-w-xs">
+                <EvolutionNode species={species} />
+              </div>
+            </div>
+            {index < evolutions.length - 1 && (
+              <div className="flex justify-center">
+                <div className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center border border-border-light dark:border-gray-600">
+                  <ChevronRight className="w-5 h-5 text-gray-400 transform rotate-90" />
+                </div>
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
+
+      {/* Desktop Layout - Horizontal Flow */}
+      <div className="hidden sm:flex items-center justify-center flex-wrap gap-4">
+        {evolutions.map((species, index) => (
+          <React.Fragment key={species.name}>
+            <div className="flex-shrink-0">
+              <EvolutionNode species={species} />
+            </div>
+            {index < evolutions.length - 1 && (
+              <div className="flex-shrink-0 flex items-center justify-center">
+                <div className="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center border border-border-light dark:border-gray-600">
+                  <ChevronRight className="w-5 h-5 text-gray-400" />
+                </div>
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+      </div>
     </div>
   );
 };
