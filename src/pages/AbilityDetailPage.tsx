@@ -12,7 +12,6 @@ import {
   formatPokemonName,
   extractIdFromUrl,
 } from '../utils/pokemon';
-import { PokeAPI } from 'pokeapi-types';
 import { FavoriteButton } from '../components/common/FavoriteButton';
 
 type ViewMode = 'grid' | 'list';
@@ -349,7 +348,7 @@ export const AbilityDetailPage: React.FC = () => {
       </div>
 
       {/* Ability Description */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
           Ability Description
         </h2>
@@ -407,7 +406,7 @@ export const AbilityDetailPage: React.FC = () => {
       />
 
       {/* Pokemon List */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      <div>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
             Pokémon with {formatPokemonName(name!)}

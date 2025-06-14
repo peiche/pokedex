@@ -107,7 +107,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
     statusFilter !== 'all';
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 p-6 ${className}`}>
+    <div className={className}>
       <div className="space-y-6">
         {/* Search Bar */}
         {enableSearch && (

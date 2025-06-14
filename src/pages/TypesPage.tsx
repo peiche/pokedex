@@ -62,7 +62,7 @@ export const TypesPage: React.FC = () => {
       </div>
 
       {/* Type Information */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           About Pokémon Types
         </h2>
