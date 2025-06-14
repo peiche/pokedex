@@ -12,6 +12,7 @@ interface FavoriteButtonProps {
   variant?: 'default' | 'overlay' | 'minimal';
   className?: string;
   showTooltip?: boolean;
+  onUnfavorite?: () => void;
 }
 
 export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
@@ -19,7 +20,8 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   size = 'md',
   variant = 'default',
   className = '',
-  showTooltip = true
+  showTooltip = true,
+  onUnfavorite
 }) => {
   const { isFavorite, toggleFavorite } = useFavorites();
   const [isAnimating, setIsAnimating] = useState(false);
@@ -32,11 +34,18 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     e.stopPropagation();
     
     setIsAnimating(true);
-    toggleFavorite({
-      id: pokemonId,
-      name: pokemon.name,
-      url: pokemon.url
-    });
+    
+    // If unfavoriting and we have a callback, use it for animation
+    if (favorited && onUnfavorite) {
+      onUnfavorite();
+    } else {
+      // Otherwise, toggle immediately
+      toggleFavorite({
+        id: pokemonId,
+        name: pokemon.name,
+        url: pokemon.url
+      });
+    }
     
     // Reset animation after a short delay
     setTimeout(() => setIsAnimating(false), 200);

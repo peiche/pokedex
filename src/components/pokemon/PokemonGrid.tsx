@@ -10,12 +10,18 @@ interface PokemonGridProps {
   }>;
   isLoading?: boolean;
   viewMode?: 'grid' | 'list';
+  exitingPokemonIds?: Set<number>;
+  onAnimationEnd?: (id: number) => void;
+  onUnfavorite?: (id: number) => void;
 }
 
 export const PokemonGrid: React.FC<PokemonGridProps> = ({ 
   pokemon, 
   isLoading, 
-  viewMode = 'grid' 
+  viewMode = 'grid',
+  exitingPokemonIds,
+  onAnimationEnd,
+  onUnfavorite
 }) => {
   if (isLoading) {
     return <SkeletonGrid />;
@@ -26,7 +32,12 @@ export const PokemonGrid: React.FC<PokemonGridProps> = ({
       <div className="space-y-3" role="list" aria-label="Pokémon list">
         {pokemon.map((poke) => (
           <div key={poke.name} role="listitem">
-            <PokemonListItem pokemon={poke} />
+            <PokemonListItem 
+              pokemon={poke} 
+              exitingPokemonIds={exitingPokemonIds}
+              onAnimationEnd={onAnimationEnd}
+              onUnfavorite={onUnfavorite}
+            />
           </div>
         ))}
       </div>
@@ -41,7 +52,12 @@ export const PokemonGrid: React.FC<PokemonGridProps> = ({
     >
       {pokemon.map((poke) => (
         <div key={poke.name} role="gridcell">
-          <PokemonCard pokemon={poke} />
+          <PokemonCard 
+            pokemon={poke} 
+            exitingPokemonIds={exitingPokemonIds}
+            onAnimationEnd={onAnimationEnd}
+            onUnfavorite={onUnfavorite}
+          />
         </div>
       ))}
     </div>

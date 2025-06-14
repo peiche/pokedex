@@ -10,9 +10,17 @@ interface PokemonCardProps {
     name: string;
     url: string;
   };
+  exitingPokemonIds?: Set<number>;
+  onAnimationEnd?: (id: number) => void;
+  onUnfavorite?: (id: number) => void;
 }
 
-export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
+export const PokemonCard: React.FC<PokemonCardProps> = ({ 
+  pokemon, 
+  exitingPokemonIds,
+  onAnimationEnd,
+  onUnfavorite
+}) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   
@@ -23,8 +31,29 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
   // Fetch Pokemon data to get types
   const { data: pokemonData, isLoading: typesLoading } = usePokemon(pokemonId);
 
+  // Check if this Pokemon is currently exiting
+  const isExiting = exitingPokemonIds?.has(pokemonId) || false;
+
+  const handleTransitionEnd = (e: React.TransitionEvent) => {
+    // Only handle the opacity transition on the wrapper div
+    if (e.propertyName === 'opacity' && isExiting && onAnimationEnd) {
+      onAnimationEnd(pokemonId);
+    }
+  };
+
+  const handleUnfavoriteClick = () => {
+    if (onUnfavorite) {
+      onUnfavorite(pokemonId);
+    }
+  };
+
   return (
-    <div className="group relative bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300 overflow-hidden">
+    <div 
+      className={`group relative bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 hover:shadow-lg hover:scale-105 hover:border-border-light-hover dark:hover:border-gray-600 transition-all duration-300 overflow-hidden ${
+        isExiting ? 'opacity-0' : 'opacity-100'
+      }`}
+      onTransitionEnd={handleTransitionEnd}
+    >
       {/* Favorite Button - Positioned absolutely in top-right corner */}
       <div className="absolute top-3 right-3 z-10 transition-opacity duration-200">
         <FavoriteButton 
@@ -32,6 +61,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
           size="sm" 
           variant="overlay"
           showTooltip={false}
+          onUnfavorite={handleUnfavoriteClick}
         />
       </div>
 

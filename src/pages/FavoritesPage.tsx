@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, Search, Trash2, ArrowRight } from 'lucide-react';
 import { useFavorites } from '../hooks/useFavorites';
@@ -10,8 +10,11 @@ import { Pagination } from '../components/common/Pagination';
 import { extractIdFromUrl } from '../utils/pokemon';
 
 export const FavoritesPage: React.FC = () => {
-  const { favorites, favoritesCount, clearAllFavorites } = useFavorites();
+  const { favorites, favoritesCount, clearAllFavorites, removeFromFavorites } = useFavorites();
   const { preferences, updatePagePreference } = usePagePreferences('favorites');
+  
+  // State for managing exit animations
+  const [exitingPokemonIds, setExitingPokemonIds] = useState<Set<number>>(new Set());
   
   // Filter and sort state management
   const filterSort = useFilterSort({
@@ -68,6 +71,23 @@ export const FavoritesPage: React.FC = () => {
   const startIndex = (filterSort.currentPage - 1) * filterSort.itemsPerPage;
   const paginatedFavorites = processedFavorites.slice(startIndex, startIndex + filterSort.itemsPerPage);
 
+  // Handle animation completion and actual removal
+  const handleAnimationEnd = useCallback((pokemonId: number) => {
+    // Remove from favorites
+    removeFromFavorites(pokemonId);
+    // Remove from exiting set
+    setExitingPokemonIds(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(pokemonId);
+      return newSet;
+    });
+  }, [removeFromFavorites]);
+
+  // Handle unfavorite action (start animation)
+  const handleUnfavorite = useCallback((pokemonId: number) => {
+    setExitingPokemonIds(prev => new Set(prev).add(pokemonId));
+  }, []);
+
   const handlePageChange = (newPage: number) => {
     filterSort.setCurrentPage(newPage);
     // Smooth scroll to top
@@ -87,6 +107,7 @@ export const FavoritesPage: React.FC = () => {
     if (window.confirm(`Are you sure you want to remove all ${favoritesCount} Pokémon from your favorites? This action cannot be undone.`)) {
       clearAllFavorites();
       filterSort.resetFilters();
+      setExitingPokemonIds(new Set()); // Clear any pending animations
     }
   };
 
@@ -166,6 +187,9 @@ export const FavoritesPage: React.FC = () => {
               <PokemonGrid 
                 pokemon={paginatedFavorites} 
                 viewMode={preferences.viewMode}
+                exitingPokemonIds={exitingPokemonIds}
+                onAnimationEnd={handleAnimationEnd}
+                onUnfavorite={handleUnfavorite}
               />
 
               {/* Pagination */}
