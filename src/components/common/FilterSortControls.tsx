@@ -107,7 +107,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
     statusFilter !== 'all';
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-border-light dark:border-gray-700 p-6 ${className}`}>
+    <div className={className}>
       <div className="space-y-6">
         {/* Search Bar */}
         {enableSearch && (
@@ -119,7 +119,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
+                className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
                 disabled={isLoading}
               />
             </div>
@@ -147,7 +147,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
               <select
                 value={generationFilter}
                 onChange={(e) => onGenerationFilterChange(e.target.value as FilterOption)}
-                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
+                className="bg-gray-50 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
                 disabled={isLoading}
               >
                 <option value="all">All Generations</option>
@@ -168,7 +168,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
               <select
                 value={typeFilter}
                 onChange={(e) => onTypeFilterChange(e.target.value as TypeFilter)}
-                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
+                className="bg-gray-50 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
                 disabled={isLoading}
               >
                 <option value="all">All Types</option>
@@ -185,7 +185,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
               <select
                 value={categoryFilter}
                 onChange={(e) => onCategoryFilterChange(e.target.value as CategoryFilter)}
-                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
+                className="bg-gray-50 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
                 disabled={isLoading}
               >
                 <option value="all">All Categories</option>
@@ -199,7 +199,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
               <select
                 value={statusFilter}
                 onChange={(e) => onStatusFilterChange(e.target.value as StatusFilter)}
-                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
+                className="bg-gray-50 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
                 disabled={isLoading}
               >
                 <option value="all">All Status</option>
@@ -212,7 +212,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
             <select
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value as SortOption)}
-              className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
+              className="bg-gray-50 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
               disabled={isLoading}
             >
               {availableSorts.map(sort => (
@@ -227,11 +227,11 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
           <div className="flex items-center gap-4">
             {/* View Mode Toggle */}
             {enableViewModeToggle && onViewModeChange && (
-              <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1 border border-border-light dark:border-gray-600">
+              <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                 <button
                   onClick={() => onViewModeChange('grid')}
                   className={`p-2 rounded-md transition-colors ${viewMode === 'grid'
-                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
+                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
                       : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                     }`}
                   disabled={isLoading}
@@ -242,7 +242,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
                 <button
                   onClick={() => onViewModeChange('list')}
                   className={`p-2 rounded-md transition-colors ${viewMode === 'list'
-                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm border border-border-light dark:border-gray-500'
+                      ? 'bg-white dark:bg-gray-600 text-blue-600 dark:text-blue-400 shadow-sm'
                       : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                     }`}
                   disabled={isLoading}
@@ -259,7 +259,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
               <select
                 value={itemsPerPage}
                 onChange={(e) => onItemsPerPageChange(parseInt(e.target.value) as ItemsPerPageOption)}
-                className="bg-gray-50 dark:bg-gray-700 border border-border-light dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white"
+                className="bg-gray-50 dark:bg-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
                 disabled={isLoading}
               >
                 <option value={10}>10 per page</option>
@@ -273,7 +273,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
 
         {/* Results Summary */}
         {(totalItems !== undefined || filteredItems !== undefined) && (
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between pt-4 border-t border-border-light dark:border-gray-600">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between pt-4">
             <div className="text-sm text-gray-600 dark:text-gray-400">
               {filteredItems !== undefined && totalItems !== undefined ? (
                 hasActiveFilters ? (
