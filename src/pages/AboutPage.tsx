@@ -112,8 +112,8 @@ export const AboutPage: React.FC = () => {
         </div>
       </div>
 
-      {/* How to Browse and Search */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      {/* How to Browse and Search - Removed gray background, padding, and borders */}
+      <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
           <Search className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           Browsing & Searching Pokémon
@@ -181,8 +181,8 @@ export const AboutPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Type Exploration */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      {/* Type Exploration - Removed gray background, padding, and borders */}
+      <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
           <Layers className="w-6 h-6 text-green-600 dark:text-green-400" />
           Exploring Pokémon Types
@@ -236,8 +236,8 @@ export const AboutPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Abilities Guide */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      {/* Abilities Guide - Removed gray background, padding, and borders */}
+      <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
           <Zap className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
           Understanding Pokémon Abilities
@@ -286,8 +286,8 @@ export const AboutPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Evolution Chains */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      {/* Evolution Chains - Removed gray background, padding, and borders */}
+      <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
           <TrendingUp className="w-6 h-6 text-purple-600 dark:text-purple-400" />
           Navigating Evolution Chains
@@ -335,8 +335,8 @@ export const AboutPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Navigation Tips */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-border-light dark:border-gray-700 p-8">
+      {/* Navigation Tips - Removed gray background, padding, and borders */}
+      <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
           <BookOpen className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
           Navigation Tips
