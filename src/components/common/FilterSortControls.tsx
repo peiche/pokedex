@@ -254,7 +254,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
 
         {/* Results Summary and Items Per Page Row */}
         {(totalItems !== undefined || filteredItems !== undefined) && (
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between pt-4">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             {/* Results Summary - Left Side */}
             <div className="text-sm text-gray-600 dark:text-gray-400">
               {filteredItems !== undefined && totalItems !== undefined ? (

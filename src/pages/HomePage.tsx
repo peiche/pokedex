@@ -97,8 +97,8 @@ export const HomePage: React.FC = () => {
         {processedPokemon.length > 0 && (
           <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">
             {filterSort.generationFilter === 'all' 
-              ? `${processedPokemon.length} Pokémon available`
-              : `${processedPokemon.length} Pokémon in Generation ${filterSort.generationFilter.replace('gen', '')}`
+              ? `${processedPokemon.length.toLocaleString()} Pokémon available`
+              : `${processedPokemon.length.toLocaleString()} Pokémon in Generation ${filterSort.generationFilter.replace('gen', '')}`
             }
           </p>
         )}
