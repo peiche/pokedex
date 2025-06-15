@@ -259,14 +259,14 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
             <div className="text-sm text-gray-600 dark:text-gray-400">
               {filteredItems !== undefined && totalItems !== undefined ? (
                 hasActiveFilters ? (
-                  <>Showing {filteredItems} of {totalItems} results</>
+                  <>Showing {filteredItems} of {totalItems.toLocaleString()} results</>
                 ) : (
-                  <>{totalItems} total results</>
+                  <>{totalItems.toLocaleString()} total results</>
                 )
               ) : filteredItems !== undefined ? (
                 <>{filteredItems} results</>
               ) : totalItems !== undefined ? (
-                <>{totalItems} total results</>
+                <>{totalItems.toLocaleString()} total results</>
               ) : null}
 
               {hasActiveFilters && (

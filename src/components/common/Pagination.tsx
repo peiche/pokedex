@@ -156,7 +156,7 @@ export const Pagination: React.FC<PaginationProps> = ({
       {/* Page info */}
       {showPageInfo && totalItems && (
         <div className="text-sm text-gray-600 dark:text-gray-400 text-center">
-          Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} items
+          Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems.toLocaleString()} items
         </div>
       )}
 
