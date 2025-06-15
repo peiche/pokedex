@@ -2,26 +2,26 @@ import { useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 // Common filter and sort types
-export type SortOption = 
-  | 'name-asc' 
-  | 'name-desc' 
-  | 'pokedex-asc' 
-  | 'pokedex-desc' 
-  | 'date-added' 
-  | 'popularity' 
-  | 'type' 
+export type SortOption =
+  | 'name-asc'
+  | 'name-desc'
+  | 'pokedex-asc'
+  | 'pokedex-desc'
+  | 'date-added'
+  | 'popularity'
+  | 'type'
   | 'category';
 
-export type FilterOption = 
-  | 'all' 
-  | 'gen1' 
-  | 'gen2' 
-  | 'gen3' 
-  | 'gen4' 
-  | 'gen5' 
-  | 'gen6' 
-  | 'gen7' 
-  | 'gen8' 
+export type FilterOption =
+  | 'all'
+  | 'gen1'
+  | 'gen2'
+  | 'gen3'
+  | 'gen4'
+  | 'gen5'
+  | 'gen6'
+  | 'gen7'
+  | 'gen8'
   | 'gen9';
 
 export type StatusFilter = 'all' | 'active' | 'deprecated';
@@ -53,7 +53,7 @@ export interface FilterSortConfig {
 
 export const useFilterSort = (config: FilterSortConfig = {}) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const {
     enableSearch = true,
     enableGenerationFilter = true,
@@ -80,36 +80,36 @@ export const useFilterSort = (config: FilterSortConfig = {}) => {
   // Update URL parameters
   const updateState = useCallback((updates: Partial<FilterSortState>) => {
     const newParams = new URLSearchParams(searchParams);
-    
+
     Object.entries(updates).forEach(([key, value]) => {
-      if (value === '' || 
-          (key === 'searchQuery' && value === '') ||
-          (key === 'sortBy' && value === defaultSort) ||
-          (key === 'generationFilter' && value === 'all') ||
-          (key === 'typeFilter' && value === 'all') ||
-          (key === 'categoryFilter' && value === 'all') ||
-          (key === 'statusFilter' && value === 'all') ||
-          (key === 'currentPage' && value === 1) ||
-          (key === 'itemsPerPage' && value === defaultItemsPerPage)) {
+      if (value === '' ||
+        (key === 'searchQuery' && value === '') ||
+        (key === 'sortBy' && value === defaultSort) ||
+        (key === 'generationFilter' && value === 'all') ||
+        (key === 'typeFilter' && value === 'all') ||
+        (key === 'categoryFilter' && value === 'all') ||
+        (key === 'statusFilter' && value === 'all') ||
+        (key === 'currentPage' && value === 1) ||
+        (key === 'itemsPerPage' && value === defaultItemsPerPage)) {
         // Map state keys to URL parameter names
         const paramKey = key === 'searchQuery' ? 'search' :
-                        key === 'sortBy' ? 'sort' :
-                        key === 'generationFilter' ? 'generation' :
-                        key === 'typeFilter' ? 'type' :
-                        key === 'categoryFilter' ? 'category' :
-                        key === 'statusFilter' ? 'status' :
-                        key === 'currentPage' ? 'page' :
-                        key === 'itemsPerPage' ? 'limit' : key;
+          key === 'sortBy' ? 'sort' :
+            key === 'generationFilter' ? 'generation' :
+              key === 'typeFilter' ? 'type' :
+                key === 'categoryFilter' ? 'category' :
+                  key === 'statusFilter' ? 'status' :
+                    key === 'currentPage' ? 'page' :
+                      key === 'itemsPerPage' ? 'limit' : key;
         newParams.delete(paramKey);
       } else {
         const paramKey = key === 'searchQuery' ? 'search' :
-                        key === 'sortBy' ? 'sort' :
-                        key === 'generationFilter' ? 'generation' :
-                        key === 'typeFilter' ? 'type' :
-                        key === 'categoryFilter' ? 'category' :
-                        key === 'statusFilter' ? 'status' :
-                        key === 'currentPage' ? 'page' :
-                        key === 'itemsPerPage' ? 'limit' : key;
+          key === 'sortBy' ? 'sort' :
+            key === 'generationFilter' ? 'generation' :
+              key === 'typeFilter' ? 'type' :
+                key === 'categoryFilter' ? 'category' :
+                  key === 'statusFilter' ? 'status' :
+                    key === 'currentPage' ? 'page' :
+                      key === 'itemsPerPage' ? 'limit' : key;
         newParams.set(paramKey, value.toString());
       }
     });
@@ -166,7 +166,7 @@ export const useFilterSort = (config: FilterSortConfig = {}) => {
   return {
     // Current state
     ...currentState,
-    
+
     // Update functions
     setSearchQuery,
     setSortBy,
@@ -177,7 +177,7 @@ export const useFilterSort = (config: FilterSortConfig = {}) => {
     setCurrentPage,
     setItemsPerPage,
     resetFilters,
-    
+
     // Configuration
     config: {
       enableSearch,
@@ -212,16 +212,18 @@ export const sortItems = <T extends { name: string; url?: string; id?: number }>
         const idB = extractId ? extractId(b) : (b.id || 0);
         return idB - idA;
       }
-      case 'date-added':
+      case 'date-added': {
         // For now, sort by ID as a proxy for date added
         const idA = extractId ? extractId(a) : (a.id || 0);
         const idB = extractId ? extractId(b) : (b.id || 0);
         return idA - idB;
-      case 'popularity':
+      }
+      case 'popularity': {
         // For now, sort by reverse ID as a proxy for popularity
         const popIdA = extractId ? extractId(a) : (a.id || 0);
         const popIdB = extractId ? extractId(b) : (b.id || 0);
         return popIdB - popIdA;
+      }
       case 'type':
         // This would need additional type information
         return a.name.localeCompare(b.name);
@@ -240,7 +242,7 @@ export const filterByGeneration = <T extends { url?: string; id?: number }>(
   extractId?: (item: T) => number
 ): T[] => {
   if (generation === 'all') return items;
-  
+
   const genNumber = parseInt(generation.replace('gen', ''));
   return items.filter(item => {
     const id = extractId ? extractId(item) : (item.id || 0);
@@ -253,9 +255,9 @@ export const filterBySearch = <T extends { name: string }>(
   query: string
 ): T[] => {
   if (!query.trim()) return items;
-  
+
   const searchTerm = query.toLowerCase();
-  return items.filter(item => 
+  return items.filter(item =>
     item.name.toLowerCase().includes(searchTerm)
   );
 };

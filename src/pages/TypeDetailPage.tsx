@@ -12,7 +12,6 @@ import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import {
   formatPokemonName,
   typeColors,
-  getTextColorForBackground,
   extractIdFromUrl,
 } from '../utils/pokemon';
 
@@ -123,7 +122,6 @@ export const TypeDetailPage: React.FC = () => {
 
   const { typeInfo } = data;
   const backgroundColor = typeColors[name!] || '#68D391';
-  const textColor = getTextColorForBackground(backgroundColor);
 
   const TypeEffectivenessSection: React.FC<{
     title: string;

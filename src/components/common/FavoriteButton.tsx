@@ -29,7 +29,13 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   const pokemonId = extractIdFromUrl(pokemon.url);
   const favorited = isFavorite(pokemonId);
 
-  const handleClick = (e: React.MouseEvent) => {
+  interface CommonEventProperties {
+    currentTarget: EventTarget & Element;
+    preventDefault: () => void;
+    stopPropagation: () => void;
+  }
+
+  const handleClick = (e: CommonEventProperties) => {
     e.preventDefault();
     e.stopPropagation();
     
@@ -55,7 +61,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       e.stopPropagation();
-      handleClick(e as any);
+      handleClick(e);
     }
   };
 

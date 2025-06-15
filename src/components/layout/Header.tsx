@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, Menu, X, Sun, Moon, Zap, Heart } from 'lucide-react';
 import { useCombinedSearch } from '../../hooks/usePokemon';
 import { debounce, formatPokemonName, extractIdFromUrl } from '../../utils/pokemon';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../hooks/useTheme';
 
 export const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -51,7 +51,7 @@ export const Header: React.FC = () => {
   // Close mobile menu when route changes
   useEffect(() => {
     setIsMenuOpen(false);
-  }, [location.pathname]);
+  }, []);
 
   return (
     <>
