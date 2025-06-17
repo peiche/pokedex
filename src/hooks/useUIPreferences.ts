@@ -111,7 +111,7 @@ export const usePagePreferences = (pageKey: string) => {
   
   const [pagePreferences, setPagePreferences, resetPagePreferences] = usePersistedState<PageSpecificPreferences>(
     'pokemonApp_pagePreferences',
-    {},
+    {} as PageSpecificPreferences,
     { validator: (value): value is PageSpecificPreferences => typeof value === 'object' && value !== null }
   );
 
@@ -221,7 +221,7 @@ export const usePreferencesManager = () => {
   const { preferences: globalPreferences, resetPreferences: resetGlobal } = useUIPreferences();
   const [pagePreferences, , resetPagePreferences] = usePersistedState<PageSpecificPreferences>(
     'pokemonApp_pagePreferences',
-    {}
+    {} as PageSpecificPreferences,
   );
 
   const exportPreferences = () => {

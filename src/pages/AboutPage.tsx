@@ -79,7 +79,7 @@ export const AboutPage: React.FC = () => {
       {/* Header */}
       <div className="text-center">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          About Poke-Vista
+          About Poké-Vista
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto">
           Your comprehensive guide to exploring the world of Pokémon. Learn how to use all the features 
@@ -162,7 +162,7 @@ export const AboutPage: React.FC = () => {
           <StepCard
             step={3}
             title="System Preference Detection"
-            description="When you first visit Poke-Vista, the theme automatically matches your device's system preference. If your device is set to dark mode, the site will load in dark mode, and vice versa."
+            description="When you first visit Poké-Vista, the theme automatically matches your device's system preference. If your device is set to dark mode, the site will load in dark mode, and vice versa."
             visual={
               <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-600 rounded-lg">
                 <Monitor className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -176,7 +176,7 @@ export const AboutPage: React.FC = () => {
           <StepCard
             step={4}
             title="Persistent Theme Choice"
-            description="Your theme preference is automatically saved to your browser's local storage. When you return to Poke-Vista, it will remember your choice and load in your preferred mode."
+            description="Your theme preference is automatically saved to your browser's local storage. When you return to Poké-Vista, it will remember your choice and load in your preferred mode."
           />
         </div>
 
