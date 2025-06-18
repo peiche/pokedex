@@ -1,6 +1,6 @@
 # Poke-Vista
 
-A modern, responsive, and feature-rich Poke-Vista built with React, React Query, and Tailwind CSS. Explore the world of Pokémon with seamless browse, powerful search, and beautiful official artwork.
+A modern, responsive, and feature-rich Pokedex built with React, React Query, and Tailwind CSS. Explore the world of Pokémon with seamless browse, powerful search, and beautiful official artwork.
 
 ## Features
 
@@ -8,7 +8,7 @@ A modern, responsive, and feature-rich Poke-Vista built with React, React Query,
 * **📱 Fully Responsive:** Built with Tailwind CSS and designed to look great on any device, from mobile phones to large desktop displays.
 * **🔍 Comprehensive Search:** Easily find Pokémon, types, and abilities with a robust search functionality.
 * **📖 Browse & Explore:** Navigate through Pokémon, types, and abilities with intuitive browse features.
-* **🖼️ Official Artwork:** Experience the Poke-Vista with high-quality official Pokémon artwork.
+* **🖼️ Official Artwork:** Experience the Pokedex with high-quality official Pokémon artwork.
 * **🔗 Bookmarkable URLs:** Seamless routing allows for easy bookmarking of individual Pokémon, types, and abilities.
 * **📊 Detailed Information:** Access a wealth of information for each Pokémon, including stats, abilities, types, and more.
 * **✨ Lucide Icons:** Beautiful and consistent iconography provided by Lucide Icons.
