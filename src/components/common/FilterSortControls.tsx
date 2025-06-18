@@ -112,9 +112,9 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
   const inputBaseClasses = "bg-background-light-secondary dark:bg-gray-800 border border-border-light dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-border-light-focus dark:text-white hover:border-border-light-hover dark:hover:border-gray-500 transition-colors";
 
   return (
-    <div className="border md:border-0 border-border-light dark:border-gray-700 rounded-xl p-2 md:p-0 mt-0">
+    <div>
       <button
-        className="md:hidden p-2 rounded-lg bg-background-light-secondary dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-background-neutral-muted dark:hover:bg-gray-700 transition-colors border border-border-light dark:border-gray-700 flex gap-2 items-center"
+        className="md:hidden w-full justify-center p-2 rounded-lg bg-background-light-secondary dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-background-neutral-muted dark:hover:bg-gray-700 transition-colors border border-border-light dark:border-gray-700 flex gap-2 items-center"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         aria-expanded={isMenuOpen}
       >
@@ -125,7 +125,7 @@ export const FilterSortControls: React.FC<FilterSortControlsProps> = ({
           Search Options
         </span>
       </button>
-      <div className={`_hidden border-t md:border-0 border-border-light dark:border-gray-700 mt-3 md:t-0 pt-3 md:pt-0 ${isMenuOpen ? '' : 'hidden md:block'}`}>
+      <div className={`border rounded-xl p-2 md:p-0 md:border-0 border-border-light dark:border-gray-700 mt-2 md:mt-0 pt-3 md:pt-0 ${isMenuOpen ? '' : 'hidden md:block'}`}>
         <div className={className}>
           <div className="space-y-6">
             {/* Search Bar with Inline Reset Button */}
